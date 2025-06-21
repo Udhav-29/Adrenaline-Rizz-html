@@ -28,7 +28,7 @@
         .bg-forest-green-600 { background-color: #2E7D32; }
         .bg-forest-green-700 { background-color: #216925; }
         .bg-steel-grey-100 { background-color: #E0E0E0; }
-        .text-steel-grey-700 { color: #4A5568; } /* Corrected from bg-steel-grey-700 */
+        .text-steel-grey-700 { color: #4A5568; }
         .bg-deep-sky-blue-500 { background-color: #007FFF; }
         .bg-deep-sky-blue-600 { background-color: #006EDC; }
         .bg-deep-sky-blue-700 { background-color: #005BB8; }
@@ -135,6 +135,8 @@
         // allowing inline onClick handlers in dangerouslySetInnerHTML to trigger navigation.
         let appSetCurrentPage = null;
         let appSetSelectedBlogPost = null;
+        let appSetSelectedActivityForBooking = null; // New global setter for booking
+        let appSetBookingStep = null; // New global setter for booking step
 
         // This global function is called by the onClick handlers in blog post content.
         window.setPageAndPost = (page, post = null) => {
@@ -147,16 +149,30 @@
             }
         };
 
+        // This global function is called for booking navigation
+        window.startBooking = (activity) => {
+            if (appSetCurrentPage && appSetSelectedActivityForBooking && appSetBookingStep) {
+                appSetSelectedActivityForBooking(activity);
+                appSetBookingStep(1); // Start at step 1
+                appSetCurrentPage('booking');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                console.error("React app booking setters not yet initialized.");
+            }
+        };
+
+
         // --- Sample Data ---
+        // Added slotDurationMinutes to activities
         const activities = [
-            { id: 'scuba', name: 'Scuba Diving', type: 'Water', location: 'Andaman', price: '₹3499', featured: true, femaleStaff: true, image: 'https://i.postimg.cc/3R8g2NB0/scuba-diving.jpg', description: 'Explore the vibrant underwater world of the Andaman Islands. Perfect for beginners and experienced divers alike.' },
-            { id: 'skydiving', name: 'Skydiving', type: 'Air', location: 'Mysore', price: '₹30000', featured: true, firstTime: true, image: 'https://i.postimg.cc/Hx1MxWSR/skydiving-hd-wallpaper-preview.jpg', description: 'Experience the ultimate freefall thrill over the beautiful landscapes of Mysore. Tandem jumps available for first-timers.' },
-            { id: 'snowbiking', name: 'Snow Biking', type: 'Snow', location: 'Manali', price: '₹4999', featured: false, femaleStaff: false, image: 'https://i.postimg.cc/FzjDRngg/snowbike.jpg', description: 'Zoom across snow-covered trails in Manali on a powerful snow bike. An exhilarating winter adventure.' },
-            { id: 'ziplining', name: 'Zip Lining', type: 'Land', location: 'Rishikesh', price: '₹799', featured: true, femaleStaff: true, image: 'https://i.postimg.cc/Njy2k2SZ/zipling-2.jpg', description: 'Soar through the air over the Ganges river in Rishikesh. A fun and accessible adventure for all ages.' },
-            { id: 'waterfall', name: 'Waterfall Rappelling', type: 'Water', location: 'Lonavala', price: '₹1299', featured: false, femaleStaff: false, image: 'https://i.postimg.cc/HsS751WZ/waterfall-repelling.jpg', description: 'Descend majestic waterfalls in Lonavala, feeling the force of nature. An adventurous challenge.' },
-            { id: 'sandboarding', name: 'Sandboarding', type: 'Land', location: 'Jaisalmer', price: '₹1999', featured: true, firstTime: true, image: 'https://i.postimg.cc/KYtW4N7N/desert-sandboarding-thrill-stockcake.jpg', description: 'Slide down the golden dunes of Jaisalmer. A unique desert adventure perfect for first-timers.' },
-            { id: 'kayaking', name: 'Kayaking', type: 'Water', location: 'Kerala', price: '₹899', featured: false, femaleStaff: true, image: 'https://i.postimg.cc/ydMX94V3/kayaking.jpg', description: 'Paddle through the serene backwaters of Kerala, discovering hidden canals and lush greenery.' },
-            { id: 'bungeejumping', name: 'Bungee Jumping', type: 'Land', location: 'Rishikesh', price: '₹3999', featured: true, femaleStaff: false, image: 'https://i.postimg.cc/WzVqT2N8/bungee-jumping.jpg', description: 'Leap from a great height in Rishikesh, India\'s highest bungee jumping spot. An unforgettable adrenaline rush.' },
+            { id: 'scuba', name: 'Scuba Diving', type: 'Water', location: 'Andaman', basePrice: 3499, featured: true, femaleStaff: true, image: 'https://i.postimg.cc/3R8g2NB0/scuba-diving.jpg', description: 'Explore the vibrant underwater world of the Andaman Islands. Perfect for beginners and experienced divers alike.', displayPrice: '₹3,499', slotDurationMinutes: 60 },
+            { id: 'skydiving', name: 'Skydiving', type: 'Air', location: 'Mysore', basePrice: 30000, featured: true, firstTime: true, image: 'https://i.postimg.cc/Hx1MxWSR/skydiving-hd-wallpaper-preview.jpg', description: 'Experience the ultimate freefall thrill over the beautiful landscapes of Mysore. Tandem jumps available for first-timers.', displayPrice: '₹30,000', slotDurationMinutes: 30 },
+            { id: 'snowbiking', name: 'Snow Biking', type: 'Snow', location: 'Manali', basePrice: 4999, featured: false, femaleStaff: false, image: 'https://i.postimg.cc/FzjDRngg/snowbike.jpg', description: 'Zoom across snow-covered trails in Manali on a powerful snow bike. An exhilarating winter adventure.', displayPrice: '₹4,999', slotDurationMinutes: 30 },
+            { id: 'ziplining', name: 'Zip Lining', type: 'Land', location: 'Rishikesh', basePrice: 799, featured: true, femaleStaff: true, image: 'https://i.postimg.cc/Njy2k2SZ/zipling-2.jpg', description: 'Soar through the air over the Ganges river in Rishikesh. A fun and accessible adventure for all ages.', displayPrice: '₹799', slotDurationMinutes: 30 },
+            { id: 'waterfall', name: 'Waterfall Rappelling', type: 'Water', location: 'Lonavala', basePrice: 1299, featured: false, femaleStaff: false, image: 'https://i.postimg.cc/HsS751WZ/waterfall-repelling.jpg', description: 'Descend majestic waterfalls in Lonavala, feeling the force of nature. An adventurous challenge.', displayPrice: '₹1,299', slotDurationMinutes: 30 },
+            { id: 'sandboarding', name: 'Sandboarding', type: 'Land', location: 'Jaisalmer', basePrice: 1999, featured: true, firstTime: true, image: 'https://i.postimg.cc/KYtW4N7N/desert-sandboarding-thrill-stockcake.jpg', description: 'Slide down the golden dunes of Jaisalmer. A unique desert adventure perfect for first-timers.', displayPrice: '₹1,999', slotDurationMinutes: 30 },
+            { id: 'kayaking', name: 'Kayaking', type: 'Water', location: 'Kerala', basePrice: 899, featured: false, femaleStaff: true, image: 'https://i.postimg.cc/ydMX94V3/kayaking.jpg', description: 'Paddle through the serene backwaters of Kerala, discovering hidden canals and lush greenery.', displayPrice: '₹899', slotDurationMinutes: 30 },
+            { id: 'bungeejumping', name: 'Bungee Jumping', type: 'Land', location: 'Rishikesh', basePrice: 3999, featured: true, femaleStaff: false, image: 'https://i.postimg.cc/WzVqT2N8/bungee-jumping.jpg', description: 'Leap from a great height in Rishikesh, India\'s highest bungee jumping spot. An unforgettable adrenaline rush.', displayPrice: '₹3,999', slotDurationMinutes: 30 },
         ];
 
         const testimonials = [
@@ -169,7 +185,7 @@
             {
                 id: 1, title: 'Top 5 Adventure Destinations in India: A Thrill-Seeker\'s Guide',
                 tags: ['How-To Guides', 'Industry Insights'],
-                image: 'https://placehold.co/800x450/8B4513/FFF?text=Rishikesh+Adventure',
+                image: 'https://i.postimg.cc/k47xR6Qh/hero-home-min.jpg',
                 content: `India is a land of incredible diversity, offering a plethora of adventure sports for every kind of thrill-seeker. From the mighty Himalayas to the pristine coastlines, here are our top picks for adventure destinations in India.
 
                 <strong>1. Rishikesh, Uttarakhand:</strong> The undisputed adventure capital of India, Rishikesh offers exhilarating <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">river rafting</a> on the Ganges, challenging <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">bungee jumping</a>, and serene camping experiences. Its spiritual vibe combined with adrenaline-pumping activities makes it a unique blend.
@@ -320,9 +336,14 @@
             { category: 'Insurance & Safety', question: 'Are there age limits for activities?', answer: 'Age limits vary by activity and operator. Please check the individual activity page for specific requirements.' },
         ];
 
+        // Constants for pricing
+        const ADDON_PRO_ADVENTURER_PRICE = 499;
+        const ADDON_PREMIUM_PHOTO_PACK_PRICE = 299;
+
+
         // --- Core Layout Components ---
 
-        const Navbar = ({ setCurrentPage, isMenuOpen, setIsMenuOpen, setSelectedBlogPost }) => (
+        const Navbar = ({ setCurrentPage, isMenuOpen, setIsMenuOpen, setSelectedBlogPost, currentPage }) => (
             <nav className="container mx-auto flex justify-between items-center py-4 px-6 relative z-30">
                 <a href="#" className="text-3xl font-bold tracking-tight text-[#8B4513] z-20 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500" onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>
                     Adrenaline Rizz
@@ -338,31 +359,31 @@
                 <ul className={`absolute md:relative top-full right-0 md:top-auto md:right-auto ${isMenuOpen ? 'block translate-x-0' : 'hidden translate-x-full'} md:flex flex-col md:flex-row md:space-x-6 text-lg transition-all duration-300 ease-in-out transform md:translate-x-0 md:items-center bg-terracotta-600 md:bg-transparent p-4 md:p-0 rounded-lg shadow-lg md:shadow-none md:rounded-none z-40 w-48 md:w-auto`}>
                     {/* Links use text-base for smaller font on mobile dropdown */}
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Home</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'home' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Home</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('about'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>About Us</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'about' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('about'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>About Us</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Adventures</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'adventures' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Adventures</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('pricing'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Pricing</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'pricing' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('pricing'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Pricing</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('blog'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Blog</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'blog' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('blog'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Blog</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('joinus'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Join Us</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'joinus' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('joinus'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Join Us</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('contact'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Contact</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'contact' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('contact'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Contact</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('faqs'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>FAQs</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'faqs' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('faqs'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>FAQs</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Legal</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'legal' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Legal</a>
                     </li>
                 </ul>
             </nav>
@@ -463,13 +484,13 @@
                                         <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed">{activity.description}</p>
                                         <div className="flex justify-between items-center text-lg font-semibold text-terracotta-700">
                                             <span>{activity.location}</span>
-                                            <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.price}</span>
+                                            <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.displayPrice}</span>
                                         </div>
                                         <button
                                             className="mt-6 w-full bg-forest-green-500 hover:bg-forest-green-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg focus:outline-none focus:ring-4 focus:ring-forest-green-500 focus:ring-opacity-50"
-                                            onClick={(e) => { e.stopPropagation(); setCurrentPage('adventures'); setSelectedBlogPost(null); }}
+                                            onClick={(e) => { e.stopPropagation(); window.startBooking(activity); }}
                                         >
-                                            View Details
+                                            Book Now
                                         </button>
                                     </div>
                                 </div>
@@ -627,7 +648,6 @@
 
                 <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-400">
                     <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins'] text-center">Meet Our Founder</h2>
-                    {/* Changed div to center content for single team member */}
                     <div className="flex flex-col items-center justify-center">
                         {teamMembers.map((member, index) => (
                             <div key={index} className="w-full max-w-sm flex flex-col items-center text-center">
@@ -682,7 +702,7 @@
             </div>
         );
 
-        const AdventuresPage = ({ activities }) => {
+        const AdventuresPage = ({ activities, setCurrentPage, setSelectedActivityForBooking }) => {
             const [filterType, setFilterType] = useState('All');
             const [filterLocation, setFilterLocation] = useState('All');
             const [filterFirstTime, setFilterFirstTime] = useState(false);
@@ -801,7 +821,7 @@
                                         <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed">{activity.description}</p>
                                         <div className="flex justify-between items-center text-lg font-semibold text-terracotta-700">
                                             <span><i className="fas fa-map-marker-alt mr-2 text-deep-sky-blue-600"></i>{activity.location}</span>
-                                            <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.price}</span>
+                                            <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.displayPrice}</span>
                                         </div>
                                         <div className="flex flex-wrap mt-4 text-sm">
                                             {activity.type && (
@@ -822,7 +842,7 @@
                                         </div>
                                         <button
                                             className="mt-6 w-full bg-forest-green-500 hover:bg-forest-green-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg focus:outline-none focus:ring-4 focus:ring-forest-green-500 focus:ring-opacity-50"
-                                            onClick={() => alert(`Booking for ${activity.name}`)} // Placeholder for actual booking logic
+                                            onClick={(e) => { e.stopPropagation(); window.startBooking(activity); }}
                                         >
                                             Book Now
                                         </button>
@@ -874,7 +894,7 @@
                             </div>
                             <h3 className="text-3xl font-bold text-terracotta-700 mb-4">Pro Adventurer</h3>
                             <p className="text-steel-grey-700 mb-4">For the true thrill-seeker looking for more.</p>
-                            <p className="text-5xl font-extrabold text-forest-green-700 mb-6">Activity Price + ₹499</p>
+                            <p className="text-5xl font-extrabold text-forest-green-700 mb-6">Activity Price + ₹{ADDON_PRO_ADVENTURER_PRICE}</p>
                             <ul className="text-steel-grey-700 text-left mx-auto max-w-[200px] space-y-2 mb-8">
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Verified Operator</li>
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Enhanced Injury Insurance</li>
@@ -1123,15 +1143,15 @@
                         </div>
                         <div>
                             <label htmlFor="email" className="block text-steel-grey-700 text-sm font-semibold mb-2">Your Email</label>
-                            <input type="email" id="email" name="email" className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="john.doe@example.com" />
+                            <input type="email" id="email" name="email" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="your.email@example.com" />
                         </div>
                         <div>
                             <label htmlFor="subject" className="block text-steel-grey-700 text-sm font-semibold mb-2">Subject</label>
-                            <input type="text" id="subject" name="subject" className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="Inquiry about a booking" />
+                            <input type="text" id="subject" name="subject" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="Inquiry about a booking" />
                         </div>
                         <div>
                             <label htmlFor="message" className="block text-steel-grey-700 text-sm font-semibold mb-2">Your Message</label>
-                            <textarea id="message" name="message" rows="5" className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="Tell us how we can help..."></textarea>
+                            <textarea id="message" name="message" rows="5" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="Tell us how we can help..."></textarea>
                         </div>
                         <div className="text-center">
                             <button type="submit" className="bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50">
@@ -1165,7 +1185,7 @@
 
                     {/* Category Filter */}
                     <div className="bg-white rounded-lg shadow-xl p-6 mb-12 text-center animate-fade-in-up delay-200">
-                        <label htmlFor="category-filter" className="block text-steel-grey-700 text-lg font-semibold mb-4">Filter by Category:</label>
+                        <label htmlFor="category-filter" className="block text-steel-grey-700 text-lg font-semibold mb-4">Filter by Topic:</label>
                         <div className="flex flex-wrap justify-center gap-3">
                             {categories.map(category => (
                                 <button
@@ -1299,23 +1319,632 @@
         );
 
 
+        // --- New Booking Flow Page Component ---
+        const BookingFlowPage = ({ activity, setCurrentPage, bookingStep, setBookingStep, activities }) => {
+            const [formData, setFormData] = useState({
+                fullName: '',
+                email: '',
+                phone: '',
+                dob: '',
+                emergencyContactName: '',
+                emergencyContactPhone: '',
+                agreedToTerms: false,
+            });
+            const [formErrors, setFormErrors] = useState({});
+            const [selectedAddons, setSelectedAddons] = useState({
+                proAdventurer: false,
+                premiumPhoto: false,
+            });
+            const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+            const [paymentSuccess, setPaymentSuccess] = useState(null); // null, true, false
+            const [confirmationNumber, setConfirmationNumber] = useState('');
+            const [selectedDate, setSelectedDate] = useState(null); // New state for selected date
+            const [selectedTimeSlot, setSelectedTimeSlot] = useState(null); // New state for selected time slot
+            const [currentMonth, setCurrentMonth] = useState(new Date()); // State for month displayed in calendar
+
+            // Filter out the current activity from the recommendations
+            const recommendedActivities = activities.filter(a => a.id !== activity.id)
+                                                    .sort(() => 0.5 - Math.random()) // Shuffle
+                                                    .slice(0, 3); // Get top 3
+
+            useEffect(() => {
+                // Reset form and addons if activity changes or flow restarts
+                setFormData({
+                    fullName: '',
+                    email: '',
+                    phone: '',
+                    dob: '',
+                    emergencyContactName: '',
+                    emergencyContactPhone: '',
+                    agreedToTerms: false,
+                });
+                setSelectedAddons({
+                    proAdventurer: false,
+                    premiumPhoto: false,
+                });
+                setIsProcessingPayment(false);
+                setPaymentSuccess(null);
+                setConfirmationNumber('');
+                setSelectedDate(null); // Reset date
+                setSelectedTimeSlot(null); // Reset time slot
+                setCurrentMonth(new Date()); // Reset calendar to current month
+            }, [activity]);
+
+            const handleInputChange = (e) => {
+                const { name, value, type, checked } = e.target;
+                setFormData({
+                    ...formData,
+                    [name]: type === 'checkbox' ? checked : value,
+                });
+            };
+
+            const validateStep1 = () => {
+                const errors = {};
+                if (!selectedDate) errors.selectedDate = 'Please select a date';
+                if (!selectedTimeSlot) errors.selectedTimeSlot = 'Please select a time slot';
+                if (!formData.fullName.trim()) errors.fullName = 'Full Name is required';
+                if (!formData.email.trim()) errors.email = 'Email is required';
+                else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Email is invalid';
+                if (!formData.phone.trim()) errors.phone = 'Phone Number is required';
+                if (!formData.dob.trim()) errors.dob = 'Date of Birth is required';
+                if (!formData.emergencyContactName.trim()) errors.emergencyContactName = 'Emergency Contact Name is required';
+                if (!formData.emergencyContactPhone.trim()) errors.emergencyContactPhone = 'Emergency Contact Phone is required';
+                if (!formData.agreedToTerms) errors.agreedToTerms = 'You must agree to the terms';
+                setFormErrors(errors);
+                return Object.keys(errors).length === 0;
+            };
+
+            const handleNextStep = () => {
+                if (bookingStep === 1) {
+                    if (validateStep1()) {
+                        setBookingStep(2);
+                    }
+                } else if (bookingStep === 2) {
+                    setBookingStep(3);
+                }
+            };
+
+            const handlePrevStep = () => {
+                setBookingStep(bookingStep - 1);
+            };
+
+            const handleAddonToggle = (addonName) => {
+                setSelectedAddons(prev => ({
+                    ...prev,
+                    [addonName]: !prev[addonName],
+                }));
+            };
+
+            const calculateTotalPrice = () => {
+                let total = activity.basePrice;
+                if (selectedAddons.proAdventurer) {
+                    total += ADDON_PRO_ADVENTURER_PRICE;
+                }
+                if (selectedAddons.premiumPhoto) {
+                    total += ADDON_PREMIUM_PHOTO_PACK_PRICE;
+                }
+                return total;
+            };
+
+            const handlePaymentSubmit = () => {
+                setIsProcessingPayment(true);
+                // Simulate payment processing
+                setTimeout(() => {
+                    const success = Math.random() > 0.1; // 90% chance of success
+                    setIsProcessingPayment(false);
+                    setPaymentSuccess(success);
+                    if (success) {
+                        setConfirmationNumber(`ADRIZZ-${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+                        setBookingStep(4); // Move to confirmation step
+                    } else {
+                        // Stay on payment step, show error
+                    }
+                }, 2000);
+            };
+
+            const formatPrice = (price) => {
+                return `₹${price.toLocaleString('en-IN')}`;
+            };
+
+            // Calendar functions
+            const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+            const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay(); // 0 for Sunday, 1 for Monday
+
+            const renderCalendar = (month, year) => {
+                const daysInMonth = getDaysInMonth(year, month);
+                const firstDay = getFirstDayOfMonth(year, month);
+                const calendarDays = [];
+                const today = new Date();
+                today.setHours(0,0,0,0); // Normalize today for comparison
+
+                // Fill leading empty days
+                for (let i = 0; i < firstDay; i++) {
+                    calendarDays.push(<div key={`empty-${i}`} className="p-2"></div>);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(year, month, day);
+                    date.setHours(0,0,0,0); // Normalize date for comparison
+                    const isPast = date < today; // Check if date is in the past
+                    const isSelected = selectedDate && selectedDate.toDateString() === date.toDateString();
+                    const isToday = date.toDateString() === today.toDateString();
+
+                    // Only allow selection of future dates up to 3 months from now
+                    const maxDate = new Date();
+                    maxDate.setMonth(maxDate.getMonth() + 3);
+                    maxDate.setHours(0,0,0,0);
+
+                    const isSelectable = !isPast && date <= maxDate;
+
+                    calendarDays.push(
+                        <button
+                            key={day}
+                            className={`p-2 rounded-full font-semibold transition-colors duration-200
+                                ${isSelectable ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'}
+                                ${isSelected ? 'bg-deep-sky-blue-500 text-white' : (isToday ? 'border border-deep-sky-blue-500 text-deep-sky-blue-600' : (isSelectable ? 'hover:bg-steel-grey-100' : 'text-steel-grey-400'))}
+                            `}
+                            onClick={() => isSelectable && setSelectedDate(date)}
+                            disabled={!isSelectable}
+                        >
+                            {day}
+                        </button>
+                    );
+                }
+                return calendarDays;
+            };
+
+            const generateTimeSlots = (durationMinutes) => {
+                const slots = [];
+                for (let hour = 10; hour <= 18; hour++) { // 10 AM to 6 PM
+                    if (hour < 18 || durationMinutes === 30) { // For 30-min slots, last one is 5:30-6:00
+                        let startHour = hour;
+                        let endHour = hour;
+                        let startMinute = 0;
+                        let endMinute = durationMinutes;
+
+                        // First slot of the hour (e.g., 10:00 - 10:30)
+                        let timeStringStart = `${String(startHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
+                        let timeStringEnd = `${String(endHour).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}`;
+                        slots.push(`${timeStringStart} - ${timeStringEnd}`);
+
+                        if (durationMinutes === 30) {
+                            // Second slot of the hour (e.g., 10:30 - 11:00)
+                            startMinute = 30;
+                            endMinute = 0;
+                            endHour = hour + 1;
+                            timeStringStart = `${String(hour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
+                            timeStringEnd = `${String(endHour).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}`;
+                            slots.push(`${timeStringStart} - ${timeStringEnd}`);
+                        }
+                    } else if (hour === 18 && durationMinutes === 60) {
+                        // For 60-min slots, the last one ends at 7 PM (6 PM + 1 hr)
+                        slots.push(`18:00 - 19:00`);
+                    }
+                }
+                return slots;
+            };
+
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            const displayMonth = currentMonth.getMonth();
+            const displayYear = currentMonth.getFullYear();
+
+            const nextMonth = () => {
+                const next = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+                const maxMonth = new Date();
+                maxMonth.setMonth(maxMonth.getMonth() + 2); // Allow next 2 months for display (total 3 including current)
+                maxMonth.setDate(1); // Normalize to first of month for comparison
+                if (next.getFullYear() < maxMonth.getFullYear() || (next.getFullYear() === maxMonth.getFullYear() && next.getMonth() <= maxMonth.getMonth())) {
+                     setCurrentMonth(next);
+                }
+            };
+
+            const prevMonth = () => {
+                const prev = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+                const todayMonth = new Date();
+                todayMonth.setDate(1); // Normalize to first of month for comparison
+                if (prev >= todayMonth) { // Don't go to past months
+                    setCurrentMonth(prev);
+                }
+            };
+
+
+            const renderProgressIndicator = () => {
+                const steps = ['Review', 'Enhance', 'Payment', 'Confirmation'];
+                return (
+                    <div className="flex justify-between items-center mb-8 w-full max-w-2xl mx-auto">
+                        {steps.map((step, index) => (
+                            <React.Fragment key={step}>
+                                <div className="flex flex-col items-center">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300
+                                        ${bookingStep > index ? 'bg-forest-green-500' : (bookingStep === index + 1 ? 'bg-terracotta-500' : 'bg-steel-grey-400')}`}>
+                                        {index + 1}
+                                    </div>
+                                    <p className={`text-sm mt-2 text-center transition-colors duration-300
+                                        ${bookingStep > index ? 'text-forest-green-700' : (bookingStep === index + 1 ? 'text-terracotta-600 font-semibold' : 'text-steel-grey-600')}`}>
+                                        {step}
+                                    </p>
+                                </div>
+                                {index < steps.length - 1 && (
+                                    <div className={`flex-1 h-1 mx-2 transition-colors duration-300
+                                        ${bookingStep > index + 1 ? 'bg-forest-green-500' : 'bg-steel-grey-200'}`}></div>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                );
+            };
+
+            const renderStepContent = () => {
+                switch (bookingStep) {
+                    case 1:
+                        return (
+                            <div className="animate-fade-in-up">
+                                <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Review Your Booking & Add Details</h2>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Booking Summary */}
+                                    <div className="bg-light-brown-50 p-6 rounded-lg shadow-md border border-light-brown-100">
+                                        <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Your Adventure:</h3>
+                                        <img src={activity.image} alt={activity.name} className="w-full h-48 object-cover rounded-md mb-4" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x200/CCCCCC/000000?text=${activity.name.replace(/\s/g, '+')}`; }} />
+                                        <p className="text-lg text-steel-grey-700 font-bold mb-2">{activity.name}</p>
+                                        <p className="text-steel-grey-600 mb-1">Location: {activity.location}</p>
+                                        <p className="text-steel-grey-600 mb-1">
+                                            Date: {selectedDate ? selectedDate.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Please select a date'}
+                                        </p>
+                                        <p className="text-steel-grey-600 mb-4">
+                                            Time Slot: {selectedTimeSlot || 'Please select a time slot'}
+                                        </p>
+                                        <p className="text-sm text-steel-grey-700 leading-relaxed mb-4">
+                                            Please note: Your activity will take place within the selected time slot. For activities like Scuba Diving (which requires approximately {activity.slotDurationMinutes} minutes), the chosen slot duration is specifically allocated to accommodate the full experience. For shorter activities like Zip Lining or Bungee Jumping, the selected slot provides a window for your adventure.
+                                        </p>
+                                        <p className="text-2xl font-bold text-forest-green-700">Base Price: {formatPrice(activity.basePrice)}</p>
+                                        <p className="text-sm text-forest-green-500 mt-2 flex items-center">
+                                            <i className="fas fa-shield-alt mr-2"></i> Basic Injury Insurance Included
+                                        </p>
+                                        <p className="text-sm text-forest-green-500 mt-1 flex items-center">
+                                            <i className="fas fa-check-circle mr-2"></i> Verified Operator
+                                        </p>
+                                    </div>
+
+                                    {/* Date and Time Selection */}
+                                    <div className="bg-white p-6 rounded-lg shadow-md border border-steel-grey-100">
+                                        <h3 className="text-2xl font-semibold text-forest-green-600 mb-4">Select Date & Time:</h3>
+                                        {/* Calendar */}
+                                        <div className="calendar-container mb-6">
+                                            <div className="flex justify-between items-center mb-4">
+                                                <button onClick={prevMonth} className="p-2 rounded-full hover:bg-steel-grey-100 transition-colors" aria-label="Previous month"><i className="fas fa-chevron-left"></i></button>
+                                                <span className="text-xl font-semibold text-terracotta-600">{months[displayMonth]} {displayYear}</span>
+                                                <button onClick={nextMonth} className="p-2 rounded-full hover:bg-steel-grey-100 transition-colors" aria-label="Next month"><i className="fas fa-chevron-right"></i></button>
+                                            </div>
+                                            <div className="grid grid-cols-7 gap-2 text-center text-sm font-medium text-steel-grey-600 mb-2">
+                                                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                                            </div>
+                                            <div className="grid grid-cols-7 gap-2">
+                                                {renderCalendar(displayMonth, displayYear)}
+                                            </div>
+                                            {formErrors.selectedDate && <p className="text-red-500 text-sm mt-2">{formErrors.selectedDate}</p>}
+                                        </div>
+
+                                        {/* Time Slots */}
+                                        <div className="time-slots-container">
+                                            <h4 className="text-lg font-semibold text-steel-grey-700 mb-3">Available Time Slots ({activity.slotDurationMinutes}-min slots):</h4>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-48 overflow-y-auto scrollbar-hide p-2 border border-steel-grey-100 rounded-md">
+                                                {generateTimeSlots(activity.slotDurationMinutes).map(slot => (
+                                                    <button
+                                                        key={slot}
+                                                        className={`p-2 rounded-md border text-center font-medium transition-colors duration-200
+                                                            ${selectedTimeSlot === slot ? 'bg-deep-sky-blue-500 text-white border-deep-sky-blue-500' : 'bg-steel-grey-50 text-steel-grey-700 hover:bg-steel-grey-100 border-steel-grey-200'}
+                                                        `}
+                                                        onClick={() => setSelectedTimeSlot(slot)}
+                                                    >
+                                                        {slot}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            {formErrors.selectedTimeSlot && <p className="text-red-500 text-sm mt-2">{formErrors.selectedTimeSlot}</p>}
+                                        </div>
+
+                                        {/* Participant Details Form - Combined */}
+                                        <h3 className="text-2xl font-semibold text-forest-green-600 mb-4 mt-8">Your Contact Details:</h3>
+                                        <form className="space-y-4">
+                                            <div>
+                                                <label htmlFor="fullName" className="block text-steel-grey-700 text-sm font-semibold mb-1">Full Name</label>
+                                                <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="Your Full Name" />
+                                                {formErrors.fullName && <p className="text-red-500 text-sm mt-1">{formErrors.fullName}</p>}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="email" className="block text-steel-grey-700 text-sm font-semibold mb-1">Email Address</label>
+                                                <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="your.email@example.com" />
+                                                {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="phone" className="block text-steel-grey-700 text-sm font-semibold mb-1">Phone Number</label>
+                                                <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="+91 9876543210" />
+                                                {formErrors.phone && <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>}
+                                            </div>
+                                            <div>
+                                                <label htmlFor="dob" className="block text-steel-grey-700 text-sm font-semibold mb-1">Date of Birth</label>
+                                                <input type="date" id="dob" name="dob" value={formData.dob} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" />
+                                                {formErrors.dob && <p className="text-red-500 text-sm mt-1">{formErrors.dob}</p>}
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label htmlFor="emergencyContactName" className="block text-steel-grey-700 text-sm font-semibold mb-1">Emergency Contact Name</label>
+                                                    <input type="text" id="emergencyContactName" name="emergencyContactName" value={formData.emergencyContactName} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="Emergency Contact Name" />
+                                                    {formErrors.emergencyContactName && <p className="text-red-500 text-sm mt-1">{formErrors.emergencyContactName}</p>}
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="emergencyContactPhone" className="block text-steel-grey-700 text-sm font-semibold mb-1">Emergency Contact Phone</label>
+                                                    <input type="tel" id="emergencyContactPhone" name="emergencyContactPhone" value={formData.emergencyContactPhone} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="+91 9876543210" />
+                                                    {formErrors.emergencyContactPhone && <p className="text-red-500 text-sm mt-1">{formErrors.emergencyContactPhone}</p>}
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <input type="checkbox" id="agreedToTerms" name="agreedToTerms" checked={formData.agreedToTerms} onChange={handleInputChange} className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500" />
+                                                <label htmlFor="agreedToTerms" className="ml-2 text-steel-grey-700 text-sm">
+                                                    I agree to the <a href="#" onClick={() => window.setPageAndPost('legal')} className="text-deep-sky-blue-600 hover:underline">Terms of Service</a> and <a href="#" onClick={() => window.setPageAndPost('legal')} className="text-deep-sky-blue-600 hover:underline">Cancellation Policy</a>.
+                                                </label>
+                                            </div>
+                                            {formErrors.agreedToTerms && <p className="text-red-500 text-sm mt-1">{formErrors.agreedToTerms}</p>}
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    case 2:
+                        return (
+                            <div className="animate-fade-in-up">
+                                <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Enhance Your Adventure!</h2>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Add-ons Section */}
+                                    <div className="bg-white p-6 rounded-lg shadow-md border border-steel-grey-100">
+                                        <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Optional Add-ons:</h3>
+                                        <div className="space-y-4">
+                                            <label className="flex items-center p-3 border rounded-md cursor-pointer hover:bg-light-brown-50 transition-colors">
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500"
+                                                    checked={selectedAddons.proAdventurer}
+                                                    onChange={() => handleAddonToggle('proAdventurer')}
+                                                />
+                                                <div className="ml-3">
+                                                    <span className="font-semibold text-forest-green-600">Pro Adventurer Package</span>
+                                                    <span className="text-sm text-steel-grey-700 ml-2">(+ {formatPrice(ADDON_PRO_ADVENTURER_PRICE)})</span>
+                                                    <p className="text-xs text-steel-grey-600 mt-1">Enhanced Injury Insurance & Basic Photo Pack.</p>
+                                                </div>
+                                            </label>
+                                            <label className="flex items-center p-3 border rounded-md cursor-pointer hover:bg-light-brown-50 transition-colors">
+                                                <input
+                                                    type="checkbox"
+                                                    className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500"
+                                                    checked={selectedAddons.premiumPhoto}
+                                                    onChange={() => handleAddonToggle('premiumPhoto')}
+                                                />
+                                                <div className="ml-3">
+                                                    <span className="font-semibold text-forest-green-600">Premium Photo/Video Pack</span>
+                                                    <span className="text-sm text-steel-grey-700 ml-2">(+ {formatPrice(ADDON_PREMIUM_PHOTO_PACK_PRICE)})</span>
+                                                    <p className="text-xs text-steel-grey-600 mt-1">High-resolution photos & video footage of your adventure.</p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {/* Adventures You Might Also Love */}
+                                    <div className="bg-white p-6 rounded-lg shadow-md border border-steel-grey-100">
+                                        <h3 className="text-2xl font-semibold text-forest-green-600 mb-4">Adventures You Might Also Love:</h3>
+                                        {recommendedActivities.length > 0 ? (
+                                            <div className="grid grid-cols-1 gap-4">
+                                                {recommendedActivities.map(recActivity => (
+                                                    <div key={recActivity.id} className="flex items-center p-3 border border-steel-grey-100 rounded-md bg-light-brown-50">
+                                                        <img src={recActivity.image} alt={recActivity.name} className="w-16 h-16 object-cover rounded-md mr-3" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/64x64/D3D3D3/000000?text=${recActivity.name.slice(0,1)}`; }} />
+                                                        <div>
+                                                            <p className="font-semibold text-terracotta-600 text-lg">{recActivity.name}</p>
+                                                            <p className="text-sm text-steel-grey-700">{recActivity.location} | {recActivity.displayPrice}</p>
+                                                            <a href="#" onClick={(e) => { e.preventDefault(); window.open(`index.html?page=adventures&activityId=${recActivity.id}`, '_blank'); }} className="text-deep-sky-blue-600 hover:underline text-sm mt-1 inline-block">Explore This Adventure &rarr;</a>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-steel-grey-700 italic">No other recommendations at the moment.</p>
+                                        )}
+                                        <div className="text-center mt-6">
+                                            <button
+                                                className="bg-forest-green-100 text-forest-green-700 hover:bg-forest-green-200 font-semibold py-2 px-6 rounded-full text-md transition-colors"
+                                                onClick={() => setCurrentPage('adventures')}
+                                            >
+                                                View All Adventures
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    case 3:
+                        return (
+                            <div className="animate-fade-in-up">
+                                <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Secure Payment</h2>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Final Summary */}
+                                    <div className="bg-light-brown-50 p-6 rounded-lg shadow-md border border-light-brown-100">
+                                        <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Your Order Summary:</h3>
+                                        <div className="flex justify-between text-lg text-steel-grey-700 mb-2">
+                                            <span>{activity.name}</span>
+                                            <span>{formatPrice(activity.basePrice)}</span>
+                                        </div>
+                                        {selectedAddons.proAdventurer && (
+                                            <div className="flex justify-between text-steel-grey-700 text-base mb-1">
+                                                <span>Pro Adventurer Package</span>
+                                                <span>+ {formatPrice(ADDON_PRO_ADVENTURER_PRICE)}</span>
+                                            </div>
+                                        )}
+                                        {selectedAddons.premiumPhoto && (
+                                            <div className="flex justify-between text-steel-grey-700 text-base mb-1">
+                                                <span>Premium Photo/Video Pack</span>
+                                                <span>+ {formatPrice(ADDON_PREMIUM_PHOTO_PACK_PRICE)}</span>
+                                            </div>
+                                        )}
+                                        <div className="border-t border-steel-grey-200 pt-4 mt-4 flex justify-between text-2xl font-bold text-forest-green-700">
+                                            <span>Total Amount:</span>
+                                            <span>{formatPrice(calculateTotalPrice())}</span>
+                                        </div>
+                                        <p className="text-sm text-steel-grey-600 mt-4 text-center">All prices include applicable taxes.</p>
+                                    </div>
+
+                                    {/* Payment Form */}
+                                    <div className="bg-white p-6 rounded-lg shadow-md border border-steel-grey-100">
+                                        <h3 className="text-2xl font-semibold text-forest-green-600 mb-4">Payment Information:</h3>
+                                        <div className="flex justify-center space-x-4 mb-6">
+                                            <i className="fab fa-cc-visa fa-3x text-deep-sky-blue-600"></i>
+                                            <i className="fab fa-cc-mastercard fa-3x text-terracotta-600"></i>
+                                            <i className="fas fa-money-check-alt fa-3x text-forest-green-600"></i> {/* Generic for Netbanking/UPI */}
+                                        </div>
+                                        <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handlePaymentSubmit(); }}>
+                                            <div>
+                                                <label htmlFor="cardNumber" className="block text-steel-grey-700 text-sm font-semibold mb-1">Card Number</label>
+                                                <input type="text" id="cardNumber" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="XXXX XXXX XXXX XXXX" maxLength="16" required />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label htmlFor="expiryDate" className="block text-steel-grey-700 text-sm font-semibold mb-1">Expiry Date</label>
+                                                    <input type="text" id="expiryDate" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="MM/YY" maxLength="5" required />
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="cvv" className="block text-steel-grey-700 text-sm font-semibold mb-1">CVV</label>
+                                                    <input type="text" id="cvv" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="XXX" maxLength="3" required />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label htmlFor="cardName" className="block text-steel-grey-700 text-sm font-semibold mb-1">Name on Card</label>
+                                                <input type="text" id="cardName" className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="Full Name" required />
+                                            </div>
+                                            {isProcessingPayment && (
+                                                <div className="flex items-center justify-center text-deep-sky-blue-600 mt-4">
+                                                    <i className="fas fa-spinner fa-spin mr-2"></i> Processing Payment...
+                                                </div>
+                                            )}
+                                            {paymentSuccess === false && (
+                                                <p className="text-red-500 text-center mt-4">Payment failed. Please check your details or try again.</p>
+                                            )}
+                                            <button
+                                                type="submit"
+                                                className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={isProcessingPayment}
+                                            >
+                                                Pay Now
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    case 4:
+                        return (
+                            <div className="animate-fade-in-up text-center bg-white rounded-lg shadow-xl p-8">
+                                <i className="fas fa-check-circle fa-5x text-forest-green-500 mb-6"></i>
+                                <h2 className="text-4xl font-bold text-forest-green-700 mb-4 font-['Montserrat']">
+                                    Booking Confirmed!
+                                </h2>
+                                <p className="text-lg text-steel-grey-700 mb-2">
+                                    Thank you for booking your adventure with Adrenaline Rizz!
+                                </p>
+                                <p className="text-2xl font-bold text-terracotta-600 mb-6">
+                                    Confirmation Number: {confirmationNumber}
+                                </p>
+                                <div className="max-w-md mx-auto mb-8">
+                                    <h3 className="text-xl font-semibold text-forest-green-600 mb-3">What's Next?</h3>
+                                    <ul className="list-disc list-inside text-steel-grey-700 text-left space-y-2">
+                                        <li>Your detailed booking confirmation has been sent to **{formData.email}**.</li>
+                                        <li>Please review the attached e-ticket/voucher for activity specifics and meeting points.</li>
+                                        <li><a href="#" className="text-deep-sky-blue-600 hover:underline" onClick={(e) => { e.preventDefault(); alert('Simulating download of e-ticket!'); }}>Download Your E-Ticket</a></li>
+                                        <li>Arrive at least 15 minutes before your scheduled slot.</li>
+                                    </ul>
+                                </div>
+                                <button
+                                    className="bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50"
+                                    onClick={() => { setCurrentPage('adventures'); setBookingStep(0); }} // Reset booking step
+                                >
+                                    Explore More Adventures! <i className="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            </div>
+                        );
+                    default:
+                        return <p>Something went wrong with the booking steps.</p>;
+                }
+            };
+
+            if (!activity) {
+                return (
+                    <div className="container mx-auto py-16 px-6 text-center text-xl text-terracotta-600">
+                        No activity selected for booking. Please go back to adventures page.
+                        <button
+                            className="mt-8 bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300"
+                            onClick={() => setCurrentPage('adventures')}
+                        >
+                            Go to Adventures
+                        </button>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="container mx-auto py-16 px-6">
+                    <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                        {`Book Your ${activity.name} Adventure`}
+                    </h1>
+
+                    {renderProgressIndicator()}
+
+                    <div className="bg-stone-50 rounded-lg p-8">
+                        {renderStepContent()}
+                    </div>
+
+                    {/* Navigation Buttons for steps */}
+                    {bookingStep > 0 && bookingStep < 4 && ( // Hide buttons on confirmation step
+                        <div className="flex justify-between mt-12">
+                            {bookingStep > 1 && (
+                                <button
+                                    className="bg-steel-grey-600 hover:bg-steel-grey-700 text-white font-bold py-3 px-6 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-steel-grey-500 focus:ring-opacity-50"
+                                    onClick={handlePrevStep}
+                                >
+                                    <i className="fas fa-arrow-left mr-2"></i> Back
+                                </button>
+                            )}
+                            {bookingStep < 3 && ( // Only show Next for Step 1 and 2
+                                <button
+                                    className={`ml-auto bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 px-6 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50`}
+                                    onClick={handleNextStep}
+                                >
+                                    Next <i className="fas fa-arrow-right ml-2"></i>
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+
         // --- Main App Component ---
         const App = () => {
             const [currentPage, setCurrentPage] = useState('home');
             const [isMenuOpen, setIsMenuOpen] = useState(false);
             const [selectedBlogPost, setSelectedBlogPost] = useState(null); // State for single blog post view
+            const [selectedActivityForBooking, setSelectedActivityForBooking] = useState(null); // State for activity being booked
+            const [bookingStep, setBookingStep] = useState(0); // 0: not in booking flow, 1-4: booking steps
 
-            // Expose setters to global scope for onClick handlers in dangerouslySetInnerHTML
-            // This is a workaround for this CDN/Babel setup.
+            // Expose setters to global scope for onClick handlers in dangerouslySetInnerHTML and other components
             useEffect(() => {
                 appSetCurrentPage = setCurrentPage;
                 appSetSelectedBlogPost = setSelectedBlogPost;
+                appSetSelectedActivityForBooking = setSelectedActivityForBooking;
+                appSetBookingStep = setBookingStep;
             }, []);
 
             // Close mobile menu on page change
             useEffect(() => {
                 setIsMenuOpen(false);
-            }, [currentPage, selectedBlogPost]);
+            }, [currentPage, selectedBlogPost, bookingStep]);
 
 
             // Conditional rendering based on currentPage state
@@ -1338,7 +1967,7 @@
                     case 'about':
                         return <AboutUsPage teamMembers={teamMembers} setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />;
                     case 'adventures':
-                        return <AdventuresPage activities={activities} />;
+                        return <AdventuresPage activities={activities} setCurrentPage={setCurrentPage} setSelectedActivityForBooking={setSelectedActivityForBooking} />;
                     case 'pricing':
                         return <PricingPage />;
                     case 'blog':
@@ -1351,6 +1980,8 @@
                         return <FAQsPage faqs={faqs} />;
                     case 'legal':
                         return <LegalPage />;
+                    case 'booking':
+                        return <BookingFlowPage activity={selectedActivityForBooking} setCurrentPage={setCurrentPage} bookingStep={bookingStep} setBookingStep={setBookingStep} activities={activities} />;
                     default:
                         return <HeroSection setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />; // Fallback to Home
                 }
@@ -1358,7 +1989,7 @@
 
             return (
                 <>
-                    <Navbar setCurrentPage={setCurrentPage} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} setSelectedBlogPost={setSelectedBlogPost} />
+                    <Navbar setCurrentPage={setCurrentPage} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} setSelectedBlogPost={setSelectedBlogPost} currentPage={currentPage} />
                     <main className="flex-grow">
                         {renderPage()}
                     </main>
