@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adrenaline Rizz - Your Next Thrill Starts Here</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Poppins, Montserrat, Lato -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- React and ReactDOM CDNs (for client-side rendering) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel Standalone CDN (for transpiling JSX in the browser) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Custom Tailwind Colors (would normally be in tailwind.config.js, but defined here for CDN use) */
+        .bg-light-brown-50 { background-color: #fcf8f3; }
+        .bg-light-brown-100 { background-color: #f7ede2; }
+        .bg-terracotta-500 { background-color: #E2725B; }
+        .bg-terracotta-600 { background-color: #CC624B; }
+        .bg-terracotta-700 { background-color: #B85641; }
+        .bg-forest-green-500 { background-color: #388E3C; }
+        .bg-forest-green-600 { background-color: #2E7D32; }
+        .bg-forest-green-700 { background-color: #216925; }
+        .bg-steel-grey-100 { background-color: #E0E0E0; }
+        .text-steel-grey-700 { color: #4A5568; } /* Corrected from bg-steel-grey-700 */
+        .bg-deep-sky-blue-500 { background-color: #007FFF; }
+        .bg-deep-sky-blue-600 { background-color: #006EDC; }
+        .bg-deep-sky-blue-700 { background-color: #005BB8; }
+        .text-light-brown-500 { color: #fcf8f3; }
+        .text-terracotta-500 { color: #E2725B; }
+        .text-terracotta-600 { color: #CC624B; }
+        .text-forest-green-500 { color: #388E3C; }
+        .text-forest-green-600 { color: #2E7D32; }
+        .text-steel-grey-600 { color: #546E7A; }
+        .text-deep-sky-blue-600 { color: #006EDC; }
+        .border-light-brown-500 { border-color: #fcf8f3; }
+        .border-terracotta-500 { border-color: #E2725B; }
+        .border-forest-green-500 { border-color: #388E3C; }
+        .border-forest-green-600 { border-color: #2E7D32; }
+        .border-steel-grey-600 { border-color: #546E7A; }
+        .border-deep-sky-blue-500 { border-color: #007FFF; }
+
+        body {
+            font-family: 'Poppins', 'Montserrat', 'Lato', sans-serif;
+        }
+        /* Hide scrollbar for specific elements, good for carousels */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Fade-in animation for sections */
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .animate-fade-in-up.delay-200 {
+            animation-delay: 0.2s;
+        }
+        .animate-fade-in-up.delay-400 {
+            animation-delay: 0.4s;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Styles for blog post content (prose) to ensure readable HTML rendering */
+        .prose a {
+            color: #006EDC; /* deep-sky-blue-600 */
+            text-decoration: underline;
+        }
+        .prose a:hover {
+            color: #005BB8; /* deep-sky-blue-700 */
+        }
+        .prose p {
+            margin-bottom: 1em;
+            line-height: 1.6;
+        }
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5em;
+            margin-bottom: 1em;
+        }
+        .prose ul li {
+            margin-bottom: 0.5em;
+        }
+        .prose strong {
+            font-weight: 700;
+        }
+        .prose h1, .prose h2, .prose h3, .prose h4 {
+            margin-top: 1.5em;
+            margin-bottom: 0.75em;
+            font-weight: 700;
+            color: #1a202c; /* gray-900 */
+        }
+        /* Overlay for mobile menu */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 5; /* Below mobile menu, above main content */
+            display: block;
+            transition: opacity 0.3s ease-in-out;
+            opacity: 1;
+        }
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none; /* Allows clicks through when hidden */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-stone-50 text-gray-800">
+    <!-- This div is where our React app will be mounted -->
+    <div id="root" class="flex-grow flex flex-col"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Global Navigation State Management (HACKY FOR CDN/Babel, but functional) ---
+        // These variables will hold the state setters from the main App component,
+        // allowing inline onClick handlers in dangerouslySetInnerHTML to trigger navigation.
+        let appSetCurrentPage = null;
+        let appSetSelectedBlogPost = null;
+
+        // This global function is called by the onClick handlers in blog post content.
+        window.setPageAndPost = (page, post = null) => {
+            if (appSetCurrentPage) {
+                appSetCurrentPage(page);
+                appSetSelectedBlogPost(post);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                console.error("React app navigation setters not yet initialized.");
+            }
+        };
+
+        // --- Sample Data ---
+        const activities = [
+            { id: 'scuba', name: 'Scuba Diving', type: 'Water', location: 'Andaman', price: '₹3499', featured: true, femaleStaff: true, image: 'https://placehold.co/400x250/007FFF/FFF?text=Scuba+Diving', description: 'Explore the vibrant underwater world of the Andaman Islands. Perfect for beginners and experienced divers alike.' },
+            { id: 'skydiving', name: 'Skydiving', type: 'Air', location: 'Mysore', price: '₹30000', featured: true, firstTime: true, image: 'https://placehold.co/400x250/87CEEB/FFF?text=Skydiving', description: 'Experience the ultimate freefall thrill over the beautiful landscapes of Mysore. Tandem jumps available for first-timers.' },
+            { id: 'snowbiking', name: 'Snow Biking', type: 'Snow', location: 'Manali', price: '₹4999', featured: false, femaleStaff: false, image: 'https://placehold.co/400x250/F0FFFF/000?text=Snow+Biking', description: 'Zoom across snow-covered trails in Manali on a powerful snow bike. An exhilarating winter adventure.' },
+            { id: 'ziplining', name: 'Zip Lining', type: 'Land', location: 'Rishikesh', price: '₹799', featured: true, femaleStaff: true, image: 'https://placehold.co/400x250/90EE90/FFF?text=Zip+Lining', description: 'Soar through the air over the Ganges river in Rishikesh. A fun and accessible adventure for all ages.' },
+            { id: 'waterfall', name: 'Waterfall Rappelling', type: 'Water', location: 'Lonavala', price: '₹1299', featured: false, femaleStaff: false, image: 'https://placehold.co/400x250/ADD8E6/000?text=Waterfall+Rappelling', description: 'Descend majestic waterfalls in Lonavala, feeling the force of nature. An adventurous challenge.' },
+            { id: 'sandboarding', name: 'Sandboarding', type: 'Land', location: 'Jaisalmer', price: '₹1999', featured: true, firstTime: true, image: 'https://placehold.co/400x250/C2B280/FFF?text=Sandboarding', description: 'Slide down the golden dunes of Jaisalmer. A unique desert adventure perfect for first-timers.' },
+            { id: 'kayaking', name: 'Kayaking', type: 'Water', location: 'Kerala', price: '₹899', featured: false, femaleStaff: true, image: 'https://placehold.co/400x250/4682B4/FFF?text=Kayaking', description: 'Paddle through the serene backwaters of Kerala, discovering hidden canals and lush greenery.' },
+            { id: 'bungeejumping', name: 'Bungee Jumping', type: 'Land', location: 'Rishikesh', price: '₹3999', featured: true, femaleStaff: false, image: 'https://placehold.co/400x250/CD5C5C/FFF?text=Bungee+Jumping', description: 'Leap from a great height in Rishikesh, India\'s highest bungee jumping spot. An unforgettable adrenaline rush.' },
+        ];
+
+        const testimonials = [
+            { id: 1, name: 'Priya Sharma', activity: 'Paragliding', text: 'An absolutely exhilarating experience! Adrenaline Rizz made it so easy to book and everything was perfectly managed.', video: 'https://placehold.co/300x200/FF5733/FFF?text=Video+1' },
+            { id: 2, name: 'Rahul Singh', activity: 'River Rafting', text: 'Safety was top-notch, and the instructors were fantastic. Highly recommend for an unforgettable adventure!', video: 'https://placehold.co/300x200/33FF57/FFF?text=Video+2' },
+            { id: 3, name: 'Anjali Desai', activity: 'Snow Biking', text: 'First time trying snow biking and it was incredible! The team was so supportive and made me feel very comfortable.', video: 'https://placehold.co/300x200/3357FF/FFF?text=Video+3' },
+        ];
+
+        const blogPosts = [
+            {
+                id: 1, title: 'Top 5 Adventure Destinations in India: A Thrill-Seeker\'s Guide',
+                tags: ['How-To Guides', 'Industry Insights'],
+                image: 'https://placehold.co/800x450/8B4513/FFF?text=Rishikesh+Adventure',
+                content: `India is a land of incredible diversity, offering a plethora of adventure sports for every kind of thrill-seeker. From the mighty Himalayas to the pristine coastlines, here are our top picks for adventure destinations in India.
+
+                <strong>1. Rishikesh, Uttarakhand:</strong> The undisputed adventure capital of India, Rishikesh offers exhilarating <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">river rafting</a> on the Ganges, challenging <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">bungee jumping</a>, and serene camping experiences. Its spiritual vibe combined with adrenaline-pumping activities makes it a unique blend.
+                
+                <strong>2. Goa:</strong> Beyond its famous beaches and nightlife, Goa is emerging as a hub for water sports. Think <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">scuba diving</a> in clear waters, parasailing, and jet-skiing. The laid-back atmosphere after an adventurous day is simply perfect.
+                
+                <strong>3. Leh-Ladakh, Jammu & Kashmir:</strong> For high-altitude adventures, Ladakh is unmatched. From challenging <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">trekking</a> trails like the Chadar Trek (winter) to mountain biking across treacherous passes, it's a paradise for extreme adventurers.
+                
+                <strong>4. Coorg, Karnataka:</strong> Known as the 'Scotland of India', Coorg offers lush landscapes perfect for <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">trekking</a>, waterfall rappelling, and off-roading. The misty hills provide a refreshing escape.
+                
+                <strong>5. Manali, Himachal Pradesh:</strong> A gateway to numerous Himalayan adventures, Manali is ideal for <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">paragliding</a>, <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">snow biking</a>, and skiing in winter. The surrounding valleys offer stunning vistas and thrilling experiences.
+                
+                <strong>Ready to explore these destinations?</strong> <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-terracotta-600 hover:underline font-bold">Book your adventure today!</a>`
+            },
+            {
+                id: 2, title: 'How to Prepare for Your First Bungee Jump: A Complete Guide',
+                tags: ['How-To Guides', 'Safety'],
+                image: 'https://placehold.co/800x450/CD5C5C/FFF?text=Bungee+Prep',
+                content: `Bungee jumping is an ultimate test of courage, offering an unparalleled rush as you freefall towards the earth. For your first jump, preparation is key to ensuring both safety and enjoyment.
+
+                <strong>1. Research Your Operator:</strong> Always choose a verified and reputable operator. Adrenaline Rizz partners only with operators who adhere to strict international safety standards. Look for certifications and read reviews.
+                
+                <strong>2. Medical Check-up:</strong> Consult your doctor before booking, especially if you have any pre-existing medical conditions (heart issues, back problems, high blood pressure, etc.). Operators will also have their own medical requirements.
+                
+                <strong>3. Dress Comfortably:</strong> Wear comfortable, athletic clothing. Avoid loose accessories. You'll be fitted with a harness, so make sure your clothing doesn't interfere with it.
+                
+                <strong>4. Mental Preparation:</strong> This is perhaps the hardest part. It's natural to feel nervous. Visualize a successful jump, focus on the thrill, and trust your instructors. Many people find counting down from 5 helps!
+                
+                <strong>5. Hydration & Nutrition:</strong> Stay well-hydrated and eat a light, non-greasy meal a few hours before your jump. Avoid heavy meals or alcohol.
+                
+                <strong>6. Listen to Instructions:</strong> Pay close attention during the safety briefing. Your instructors are experts; follow their every command.
+                
+                <strong>Remember:</strong> Every Adrenaline Rizz booking includes injury insurance for your peace of mind. Your adventure, our priority!
+                
+                <strong>Feeling ready to take the leap?</strong> <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-terracotta-600 hover:underline font-bold">Find your bungee jumping experience here!</a>`
+            },
+            {
+                id: 3, title: 'Understanding Adventure Insurance: What Adrenaline Rizz Covers',
+                tags: ['Industry Insights', 'Safety'],
+                image: 'https://placehold.co/800x450/4682B4/FFF?text=Insurance+Explained',
+                content: `Adventure sports, by their very nature, involve a degree of risk. While Adrenaline Rizz and its verified operators take every precaution to ensure your safety, unexpected incidents can occur. This is where adventure insurance becomes crucial.
+
+                <strong>Why is Insurance Important?</strong>
+                <ul>
+                    <li><strong>Peace of Mind:</strong> Knowing you're covered allows you to focus on the thrill, not the "what-ifs."</li>
+                    <li><strong>Medical Expenses:</strong> Accidents can happen. Insurance helps cover medical treatments, hospitalization, and emergency evacuation if needed.</li>
+                    <li><strong>Financial Protection:</strong> It protects you from potentially high out-of-pocket costs associated with injuries during adventurous activities.</li>
+                </ul>
+                
+                <strong>What Adrenaline Rizz Includes (by default):</strong>
+                Every booking made through Adrenaline Rizz automatically includes basic <strong>Accidental Injury Insurance</strong>. This covers:
+                <ul>
+                    <li>Medical expenses incurred due to accidental injuries sustained during the activity.</li>
+                    <li>Emergency medical evacuation (up to a certain limit).</li>
+                </ul>
+                
+                <strong>Key Exclusions (Typical for basic policies):</strong>
+                <ul>
+                    <li>Pre-existing medical conditions.</li>
+                    <li>Self-inflicted injuries or injuries sustained due to negligence/non-adherence to instructions.</li>
+                    <li>Loss of personal belongings.</li>
+                    <li>Trip cancellation/interruption (unless due to operator fault).</li>
+                </ul>
+                
+                For high-risk activities, while basic injury insurance is covered, we highly recommend considering additional comprehensive travel insurance for broader coverage, especially for international travelers or those with specific medical needs.
+                
+                <strong>Your safety is our utmost priority.</strong> We ensure all our partner operators are rigorously vetted and have excellent safety records.
+                
+                <strong>Have more questions about our policies?</strong> Visit our <a href="#" onclick="window.setPageAndPost('legal'); return false;" class="text-deep-sky-blue-600 hover:underline">Legal section</a> for full details or <a href="#" onclick="window.setPageAndPost('contact'); return false;" class="text-deep-sky-blue-600 hover:underline">contact us</a> directly.`
+            },
+            {
+                id: 4, title: 'Adrenaline Rizz App V2.0: Unlocking New Adventures',
+                tags: ['Product Updates'],
+                image: 'https://placehold.co/800x450/DDA0DD/FFF?text=App+Update',
+                content: `We're thrilled to announce the launch of Adrenaline Rizz App V2.0, packed with exciting new features designed to make your adventure booking experience smoother and more immersive than ever before!
+
+                <strong>What's New in V2.0?</strong>
+                <ul>
+                    <li><strong>Intuitive User Interface:</strong> A completely redesigned interface for easier navigation and a visually stunning experience. Discover activities faster with enhanced filtering options.</li>
+                    <li><strong>Real-time Slot Availability:</strong> Get instant updates on available slots for your preferred activities, minimizing wait times and maximizing spontaneity.</li>
+                    <li><strong>Personalized Recommendations:</strong> Our new AI-powered recommendation engine learns your preferences and suggests adventures tailored just for you.</li>
+                    <li><strong>Enhanced Safety Features:</strong> Quick access to emergency contacts and detailed safety guidelines for each activity, right in your pocket.</li>
+                    <li><strong>Offline Access:</strong> Download your booking details and safety instructions for offline access, perfect for remote adventure locations.</li>
+                    <li><strong>Integrated Photo/Video Gallery:</strong> View and download your adventure photos and videos directly from your app profile (if available from operator).</li>
+                </ul>
+                
+                <strong>How to Get the Update:</strong>
+                Simply update your existing Adrenaline Rizz app from the Google Play Store or Apple App Store. New users can download it for free!
+                
+                We're continuously working to bring you the best adventure experience in India. Your feedback helps us grow!
+                
+                <strong>Ready to experience the new app?</strong> <a href="#" onclick="window.setPageAndPost('contact'); return false;" class="text-terracotta-600 hover:underline font-bold">Download the app today!</a>`
+            },
+            {
+                id: 5, title: 'Beyond the Thrill: The Mental Benefits of Adventure Sports',
+                tags: ['How-To Guides'],
+                image: 'https://placehold.co/800x450/6B8E23/FFF?text=Mental+Benefits',
+                content: `While the rush of adrenaline is a primary draw, adventure sports offer profound mental and psychological benefits that extend far beyond the moment of thrill. Engaging with nature and pushing your limits can be incredibly therapeutic.
+
+                <strong>1. Stress Reduction:</strong> Immersing yourself in an activity like trekking or kayaking helps disconnect from daily stressors, promoting mental clarity and relaxation. The focus required often acts as a form of meditation.
+                
+                <strong>2. Building Resilience:</strong> Overcoming challenges in adventure sports (e.g., reaching a summit, navigating rapids) builds mental fortitude and resilience. This confidence translates into handling life's everyday obstacles more effectively.
+                
+                <strong>3. Enhanced Problem-Solving Skills:</strong> Many activities require quick thinking and decision-making under pressure, honing your ability to assess situations and find solutions.
+                
+                <strong>4. Boosted Self-Confidence:</strong> Successfully completing an adventure, especially one you initially feared, provides a massive boost to self-esteem and a sense of accomplishment.
+                
+                <strong>5. Connection with Nature:</strong> Spending time outdoors reconnects you with the natural world, which has been proven to reduce anxiety and improve mood.
+                
+                <strong>6. Social Connection:</strong> Group adventures foster camaraderie, teamwork, and new friendships, combating feelings of isolation.
+                
+                So, next time you're planning an adventure, remember you're not just seeking a thrill; you're investing in your mental well-being.
+                
+                <strong>Discover activities that challenge and rejuvenate your mind:</strong> <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-terracotta-600 hover:underline font-bold">Browse our adventures now!</a>`
+            },
+            {
+                id: 6, title: 'Meet Our Verified Operators: Ensuring Your Safety',
+                tags: ['Industry Insights', 'Safety'],
+                image: 'https://placehold.co/800x450/A9A9A9/FFF?text=Verified+Operators',
+                content: `At Adrenaline Rizz, your safety is our non-negotiable priority. That's why we meticulously vet every adventure operator before they join our platform. We believe that true adventure should never compromise on safety.
+
+                <strong>Our Verification Process:</strong>
+                <ul>
+                    <li><strong>Certification & Licensing:</strong> We confirm that all operators possess valid licenses and certifications from relevant national and international adventure sports bodies.</li>
+                    <li><strong>Experience & Track Record:</strong> We review their operational history, safety records, and years of experience in conducting specific activities.</li>
+                    <li><strong>Equipment Quality:</strong> Regular checks are performed to ensure that all equipment (harnesses, rafts, bikes, helmets, etc.) meets safety standards and is regularly maintained and updated.</li>
+                    <li><strong>Instructor Credentials:</strong> We verify the qualifications and experience of their instructors, ensuring they are certified first-aiders and proficient in rescue techniques.</li>
+                    <li><strong>Safety Protocols:</strong> We assess their emergency preparedness, rescue plans, and standard operating procedures for various scenarios.</li>
+                    <li><strong>Client Reviews & Feedback:</strong> We integrate feedback from previous clients to maintain a high standard of service and safety.</li>
+                </ul>
+                
+                This rigorous process ensures that when you book an adventure with Adrenaline Rizz, you're not just getting a thrill; you're getting peace of mind, knowing you're in capable and safe hands.
+                
+                <strong>Ready to trust your next adventure with the best?</strong> <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-terracotta-600 hover:underline font-bold">Explore our activities today!</a>`
+            }
+        ];
+
+        const teamMembers = [
+            { name: 'Udhav Bindal', title: 'Founder', bio: 'SRCC alumnus, passionate traveler, and a relentless seeker of change. Udhav founded Adrenaline Rizz to revolutionize India\'s adventure industry.', image: 'https://i.postimg.cc/fTtmGWGw/65a00adb886f83d02129e022-3.jpg' },
+            { name: 'Dr. Anya Sharma', title: 'Chief Safety Officer', bio: 'An ex-army veteran with extensive experience in high-altitude rescue and disaster management. Ensures all operations meet global safety standards.', image: 'https://placehold.co/200x200/6B8E23/FFF?text=Anya+Sharma', alt: 'Dr. Anya Sharma' },
+            { name: 'Sameer Khan', title: 'Head of Operator Relations', bio: 'With a background in hospitality and logistics, Sameer builds strong partnerships with our adventure operators, ensuring quality and reliability.', image: 'https://placehold.co/200x200/A9A9A9/FFF?text=Sameer+Khan', alt: 'Sameer Khan' },
+            { name: 'Meera Rajput', title: 'Marketing Lead', bio: 'A creative force driving Adrenaline Rizz\'s brand vision. Meera crafts compelling campaigns that connect thrill-seekers with unforgettable experiences.', image: 'https://placehold.co/200x200/DDA0DD/FFF?text=Meera+Rajput', alt: 'Meera Rajput' },
+        ];
+
+        const faqs = [
+            { category: 'General', question: 'How does Adrenaline Rizz work?', answer: 'Adrenaline Rizz connects you with verified adventure operators across India, allowing you to book thrilling activities with real-time slot selection and insurance included.' },
+            { category: 'General', question: 'What makes Adrenaline Rizz different?', answer: 'We focus on safety with verified operators, offer injury insurance by default, provide female instructors, and use powerful storytelling to create unique experiences.' },
+            { category: 'Activity Booking', question: 'How do I select a slot?', answer: 'On each activity page, you can choose your preferred date and time slot from available options listed by verified operators.' },
+            { category: 'Activity Booking', question: 'What is your cancellation policy?', answer: 'Cancellations are subject to our Refund & Cancellation Policy, available in the legal section. Generally, free cancellation is available up to 48 hours before the activity.' },
+            { category: 'Insurance & Safety', question: 'Is insurance included?', answer: 'Yes, basic injury insurance is included with every booking. Details are provided in our Legal section.' },
+            { category: 'Insurance & Safety', question: 'Are there age limits for activities?', answer: 'Age limits vary by activity and operator. Please check the individual activity page for specific requirements.' },
+        ];
+
+        // --- Core Layout Components ---
+
+        const Navbar = ({ setCurrentPage, isMenuOpen, setIsMenuOpen, setSelectedBlogPost }) => (
+            <nav className="container mx-auto flex justify-between items-center py-4 px-6 relative z-30">
+                <a href="#" className="text-3xl font-bold tracking-tight text-[#8B4513] z-20 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500" onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>
+                    Adrenaline Rizz
+                </a>
+                <button className="md:hidden text-[#8B4513] focus:outline-none z-20 order-last rounded-md focus:ring-2 focus:ring-terracotta-500 p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
+                    </svg>
+                </button>
+                {/* Mobile menu overlay */}
+                <div className={`overlay ${isMenuOpen ? 'block' : 'hidden'} md:hidden`} onClick={() => setIsMenuOpen(false)}></div>
+
+                <ul className={`absolute md:relative top-full right-0 md:top-auto md:right-auto ${isMenuOpen ? 'block translate-x-0' : 'hidden translate-x-full'} md:flex flex-col md:flex-row md:space-x-6 text-lg transition-all duration-300 ease-in-out transform md:translate-x-0 md:items-center bg-terracotta-600 md:bg-transparent p-4 md:p-0 rounded-lg shadow-lg md:shadow-none md:rounded-none z-40 w-48 md:w-auto`}>
+                    {/* Links use text-base for smaller font on mobile dropdown */}
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Home</a>
+                    </li>
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('about'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>About Us</a>
+                    </li>
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Adventures</a>
+                    </li>
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('pricing'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Pricing</a>
+                    </li>
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('blog'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Blog</a>
+                    </li>
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('contact'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Contact</a>
+                    </li>
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('faqs'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>FAQs</a>
+                    </li>
+                    <li className="mb-2 md:mb-0">
+                        <a href="#" className="py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Legal</a>
+                    </li>
+                </ul>
+            </nav>
+        );
+
+        const Footer = ({ setCurrentPage }) => (
+            <footer className="bg-terracotta-700 text-white py-8 px-6 mt-12 rounded-t-3xl shadow-xl">
+                <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div className="col-span-1">
+                        <h3 className="text-2xl font-bold mb-4 text-light-brown-50">Adrenaline Rizz</h3>
+                        <p className="text-sm">Your gateway to the most thrilling adventure sports in India. Safety, exhilaration, and unforgettable memories.</p>
+                        <div className="flex space-x-4 mt-4">
+                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white hover:text-light-brown-50 transition-colors duration-300">
+                                <i className="fab fa-facebook-f text-xl"></i>
+                            </a>
+                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-white hover:text-light-brown-50 transition-colors duration-300">
+                                <i className="fab fa-twitter text-xl"></i>
+                            </a>
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-white hover:text-light-brown-50 transition-colors duration-300">
+                                <i className="fab fa-instagram text-xl"></i>
+                            </a>
+                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-white hover:text-light-brown-50 transition-colors duration-300">
+                                <i className="fab fa-linkedin-in text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="col-span-1">
+                        <h4 className="font-semibold text-lg mb-4 text-light-brown-50">Quick Links</h4>
+                        <ul className="space-y-2">
+                            <li><a href="#" onClick={() => setCurrentPage('about')} className="hover:underline text-sm">About Us</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('adventures')} className="hover:underline text-sm">Adventures</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('blog')} className="hover:underline text-sm">Blog</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('contact')} className="hover:underline text-sm">Contact Us</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('faqs')} className="hover:underline text-sm">FAQs</a></li>
+                        </ul>
+                    </div>
+
+                    <div className="col-span-1">
+                        <h4 className="font-semibold text-lg mb-4 text-light-brown-50">Legal</h4>
+                        <ul className="space-y-2">
+                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Privacy Policy</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Terms of Service</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Refund & Cancellation</a></li>
+                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Safety Guidelines</a></li>
+                        </ul>
+                    </div>
+
+                    <div className="col-span-1">
+                        <h4 className="font-semibold text-lg mb-4 text-light-brown-50">Contact Info</h4>
+                        <p className="text-sm mb-2"><i className="fas fa-map-marker-alt mr-2"></i>123 Adventure Lane, Thrill City, India</p>
+                        <p className="text-sm mb-2"><i className="fas fa-envelope mr-2"></i>info@adrenalinerizz.com</p>
+                        <p className="text-sm mb-2"><i className="fas fa-phone mr-2"></i>+91 98765 43210</p>
+                    </div>
+                </div>
+                <div className="border-t border-terracotta-600 mt-8 pt-6 text-center text-sm">
+                    &copy; {new Date().getFullYear()} Adrenaline Rizz. All rights reserved.
+                </div>
+            </footer>
+        );
+
+        const CookieConsentBanner = ({ onAccept, onDecline }) => (
+            <div className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between z-50 shadow-lg">
+                <p className="text-sm mb-3 md:mb-0 md:mr-4 text-center md:text-left">
+                    We use cookies to enhance your experience. By continuing to visit this site, you agree to our <a href="#" onClick={(e) => { e.preventDefault(); window.setPageAndPost('legal'); }} className="text-deep-sky-blue-500 underline hover:text-deep-sky-blue-600">Cookie Policy</a>.
+                </p>
+                <div className="flex space-x-3">
+                    <button
+                        onClick={onAccept}
+                        className="bg-forest-green-600 hover:bg-forest-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500"
+                        aria-label="Accept Cookies"
+                    >
+                        Accept
+                    </button>
+                    <button
+                        onClick={onDecline}
+                        className="bg-terracotta-600 hover:bg-terracotta-700 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500"
+                        aria-label="Decline Cookies"
+                    >
+                        Decline
+                    </button>
+                </div>
+            </div>
+        );
+
+
+        // --- Page Components ---
+
+        const Home = ({ setCurrentPage, setSelectedBlogPost, activities, testimonials, blogPosts }) => (
+            <>
+                {/* Hero Section */}
+                <section className="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-center text-white bg-cover bg-center rounded-b-3xl shadow-lg"
+                    style={{ backgroundImage: "url('https://placehold.co/1920x800/2E7D32/FFF?text=Adventure+Hero')", backgroundAttachment: 'fixed' }}
+                    role="img" aria-label="Adventurers enjoying a thrilling activity">
+                    <div className="absolute inset-0 bg-black opacity-50 rounded-b-3xl"></div>
+                    <div className="relative z-10 p-6 max-w-4xl mx-auto animate-fade-in-up">
+                        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
+                            Your Next Thrill <span className="text-terracotta-500">Starts Here</span>
+                        </h1>
+                        <p className="text-lg md:text-xl mb-8 font-light">
+                            Discover India's most exhilarating adventure sports – booked securely with verified operators and insurance included.
+                        </p>
+                        <button
+                            onClick={() => setCurrentPage('adventures')}
+                            className="bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 px-8 rounded-full text-lg md:text-xl shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-terracotta-500"
+                            aria-label="Explore Adventures"
+                        >
+                            Explore Adventures
+                        </button>
+                    </div>
+                </section>
+
+                {/* Featured Activities Section */}
+                <section className="container mx-auto py-16 px-6 animate-fade-in-up delay-200">
+                    <h2 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Featured Adventures</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {activities.filter(activity => activity.featured).map(activity => (
+                            <div key={activity.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100 hover:shadow-xl transition-shadow duration-300 group">
+                                <img src={activity.image} alt={activity.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
+                                <div className="p-6">
+                                    <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">{activity.name}</h3>
+                                    <p className="text-steel-grey-600 text-sm mb-3"><i className="fas fa-map-marker-alt mr-1"></i> {activity.location}</p>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-terracotta-600 font-bold text-lg">{activity.price}</span>
+                                        <button
+                                            onClick={() => setCurrentPage('adventures')}
+                                            className="bg-forest-green-600 hover:bg-forest-green-700 text-white px-5 py-2 rounded-full text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500"
+                                            aria-label={`Book ${activity.name}`}
+                                        >
+                                            Book Now
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="text-center mt-12">
+                        <button
+                            onClick={() => setCurrentPage('adventures')}
+                            className="bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500"
+                            aria-label="View All Adventures"
+                        >
+                            View All Adventures
+                        </button>
+                    </div>
+                </section>
+
+                {/* Why Choose Us Section */}
+                <section className="bg-forest-green-500 text-white py-16 px-6 rounded-3xl shadow-xl">
+                    <div className="container mx-auto text-center animate-fade-in-up delay-400">
+                        <h2 className="text-4xl font-bold mb-12">Why Choose Adrenaline Rizz?</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                            <div className="p-6 bg-forest-green-600 rounded-xl shadow-lg flex flex-col items-center">
+                                <i className="fas fa-shield-alt text-5xl text-light-brown-50 mb-4"></i>
+                                <h3 className="text-2xl font-semibold mb-3">Verified Safety</h3>
+                                <p className="text-center text-sm">We partner only with operators who meet stringent international safety standards, ensuring your peace of mind.</p>
+                            </div>
+                            <div className="p-6 bg-forest-green-600 rounded-xl shadow-lg flex flex-col items-center">
+                                <i className="fas fa-file-invoice text-5xl text-light-brown-50 mb-4"></i>
+                                <h3 className="text-2xl font-semibold mb-3">Insurance Included</h3>
+                                <p className="text-center text-sm">Every booking comes with basic injury insurance, so you can focus purely on the thrill of the adventure.</p>
+                            </div>
+                            <div className="p-6 bg-forest-green-600 rounded-xl shadow-lg flex flex-col items-center">
+                                <i className="fas fa-female text-5xl text-light-brown-50 mb-4"></i>
+                                <h3 className="text-2xl font-semibold mb-3">Empowering Adventures</h3>
+                                <p className="text-center text-sm">Access to female instructors and staff options to ensure comfort and empowerment for all adventurers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Testimonials Section */}
+                <section className="container mx-auto py-16 px-6 animate-fade-in-up delay-200">
+                    <h2 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Hear From Our Thrill-Seekers</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {testimonials.map(testimonial => (
+                            <div key={testimonial.id} className="bg-white rounded-xl shadow-lg p-6 border border-steel-grey-100 flex flex-col items-center text-center hover:shadow-xl transition-shadow duration-300">
+                                <div className="w-full h-40 bg-gray-200 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                                    <img src={testimonial.video} alt={`Video testimonial from ${testimonial.name}`} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/300x200/ccc/000?text=Video+Placeholder"; }} />
+                                </div>
+                                <p className="text-lg italic text-steel-grey-700 mb-4">"{testimonial.text}"</p>
+                                <p className="font-semibold text-terracotta-600">- {testimonial.name} <span className="text-steel-grey-600">({testimonial.activity})</span></p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Latest from Blog Section */}
+                <section className="bg-light-brown-50 py-16 px-6 rounded-t-3xl shadow-inner">
+                    <div className="container mx-auto animate-fade-in-up delay-400">
+                        <h2 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Latest from Our Blog</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {blogPosts.slice(0, 3).map(post => (
+                                <div key={post.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-light-brown-100 hover:shadow-xl transition-shadow duration-300 group">
+                                    <img src={post.image} alt={post.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">{post.title}</h3>
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                            {post.tags.map((tag, index) => (
+                                                <span key={index} className="bg-steel-grey-100 text-steel-grey-600 text-xs px-3 py-1 rounded-full">{tag}</span>
+                                            ))}
+                                        </div>
+                                        <p className="text-steel-grey-600 text-sm line-clamp-3 mb-4">{post.content.replace(/<[^>]+>/g, '')}</p> {/* Strip HTML for snippet */}
+                                        <button
+                                            onClick={() => { setSelectedBlogPost(post); setCurrentPage('blogPost'); }}
+                                            className="text-terracotta-600 hover:text-terracotta-700 font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-500 rounded-md"
+                                        >
+                                            Read More <i className="fas fa-arrow-right ml-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="text-center mt-12">
+                            <button
+                                onClick={() => setCurrentPage('blog')}
+                                className="bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500"
+                                aria-label="View All Blog Posts"
+                            >
+                                View All Blog Posts
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </>
+        );
+
+        const About = ({ teamMembers }) => (
+            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">About Adrenaline Rizz</h1>
+
+                <div className="mb-16 bg-white p-8 rounded-xl shadow-lg border border-steel-grey-100">
+                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-6 text-center">Our Mission</h2>
+                    <p className="text-lg text-steel-grey-600 leading-relaxed text-center max-w-3xl mx-auto">
+                        At Adrenaline Rizz, our mission is to redefine adventure tourism in India by providing a seamless, safe, and exhilarating platform for thrill-seekers. We connect you with India's best-verified operators, ensuring every adventure is not just a booking, but a meticulously curated, unforgettable experience. We prioritize safety, transparency, and empowerment, making adrenaline accessible to everyone.
+                    </p>
+                </div>
+
+                <div className="mb-16">
+                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-8 text-center">Our Values</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
+                            <i className="fas fa-fist-raised text-4xl text-terracotta-600 mt-1"></i>
+                            <div>
+                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Exhilaration</h3>
+                                <p className="text-steel-grey-600 text-sm">Igniting the spirit of adventure and pushing boundaries to create unforgettable thrills.</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
+                            <i className="fas fa-handshake text-4xl text-forest-green-600 mt-1"></i>
+                            <div>
+                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Trust & Safety</h3>
+                                <p className="text-steel-grey-600 text-sm">Uncompromising commitment to safety standards and partnering with only the most reliable operators.</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
+                            <i className="fas fa-users text-4xl text-deep-sky-blue-600 mt-1"></i>
+                            <div>
+                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Empowerment</h3>
+                                <p className="text-steel-grey-600 text-sm">Fostering confidence and providing inclusive opportunities for all adventurers, including female staff options.</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
+                            <i className="fas fa-lightbulb text-4xl text-amber-500 mt-1"></i>
+                            <div>
+                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Innovation</h3>
+                                <p className="text-steel-grey-600 text-sm">Leveraging technology to simplify booking, enhance experiences, and personalize recommendations.</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
+                            <i className="fas fa-heart text-4xl text-red-500 mt-1"></i>
+                            <div>
+                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Passion</h3>
+                                <p className="text-steel-grey-600 text-sm">Driven by a deep love for adventure and a desire to share its transformative power with the world.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-8 text-center">Meet Our Team</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="bg-white p-6 rounded-xl shadow-lg border border-steel-grey-100 flex flex-col items-center text-center">
+                                <img
+                                    src={member.image}
+                                    alt={member.alt || member.name}
+                                    className="w-32 h-32 rounded-full object-cover mb-4 border-4 border-terracotta-500"
+                                    onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/128x128/ccc/000?text=Profile"; }}
+                                />
+                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-1">{member.name}</h3>
+                                <p className="text-terracotta-600 font-medium mb-3">{member.title}</p>
+                                <p className="text-steel-grey-600 text-sm">{member.bio}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Adventures = ({ activities, setCurrentPage }) => {
+            const [filterType, setFilterType] = useState('All');
+            const [filterLocation, setFilterLocation] = useState('All');
+            const [filterFirstTime, setFilterFirstTime] = useState(false);
+            const [filterFemaleStaff, setFilterFemaleStaff] = useState(false);
+
+            const uniqueTypes = ['All', ...new Set(activities.map(a => a.type))];
+            const uniqueLocations = ['All', ...new Set(activities.map(a => a.location))];
+
+            const filteredActivities = activities.filter(activity => {
+                const matchesType = filterType === 'All' || activity.type === filterType;
+                const matchesLocation = filterLocation === 'All' || activity.location === filterLocation;
+                const matchesFirstTime = !filterFirstTime || activity.firstTime;
+                const matchesFemaleStaff = !filterFemaleStaff || activity.femaleStaff;
+                return matchesType && matchesLocation && matchesFirstTime && matchesFemaleStaff;
+            });
+
+            return (
+                <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                    <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Discover Your Next Adventure</h1>
+
+                    {/* Filters */}
+                    <div className="bg-white p-6 rounded-xl shadow-lg mb-12 border border-steel-grey-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div className="flex-1">
+                            <label htmlFor="type-filter" className="block text-steel-grey-700 font-semibold mb-2">Activity Type:</label>
+                            <select
+                                id="type-filter"
+                                value={filterType}
+                                onChange={(e) => setFilterType(e.target.value)}
+                                className="w-full p-3 border border-steel-grey-100 rounded-lg bg-white text-steel-grey-600 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
+                            >
+                                {uniqueTypes.map(type => (
+                                    <option key={type} value={type}>{type}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex-1">
+                            <label htmlFor="location-filter" className="block text-steel-grey-700 font-semibold mb-2">Location:</label>
+                            <select
+                                id="location-filter"
+                                value={filterLocation}
+                                onChange={(e) => setFilterLocation(e.target.value)}
+                                className="w-full p-3 border border-steel-grey-100 rounded-lg bg-white text-steel-grey-600 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
+                            >
+                                {uniqueLocations.map(location => (
+                                    <option key={location} value={location}>{location}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-2 md:gap-4 md:flex-row md:items-center">
+                            <label className="flex items-center text-steel-grey-700 font-semibold cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={filterFirstTime}
+                                    onChange={(e) => setFilterFirstTime(e.target.checked)}
+                                    className="mr-2 h-5 w-5 text-deep-sky-blue-500 rounded border-steel-grey-100 focus:ring-deep-sky-blue-500"
+                                />
+                                First-Timer Friendly
+                            </label>
+                            <label className="flex items-center text-steel-grey-700 font-semibold cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={filterFemaleStaff}
+                                    onChange={(e) => setFilterFemaleStaff(e.target.checked)}
+                                    className="mr-2 h-5 w-5 text-deep-sky-blue-500 rounded border-steel-grey-100 focus:ring-deep-sky-blue-500"
+                                />
+                                Female Staff
+                            </label>
+                        </div>
+                    </div>
+
+                    {/* Activity Cards */}
+                    {filteredActivities.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                            {filteredActivities.map(activity => (
+                                <div key={activity.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100 hover:shadow-xl transition-shadow duration-300 group">
+                                    <img src={activity.image} alt={activity.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">{activity.name}</h3>
+                                        <p className="text-steel-grey-600 text-sm mb-3"><i className="fas fa-map-marker-alt mr-1"></i> {activity.location}</p>
+                                        <p className="text-steel-grey-600 text-sm line-clamp-3 mb-4">{activity.description}</p>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-terracotta-600 font-bold text-lg">{activity.price}</span>
+                                            <button
+                                                onClick={() => alert(`Booking for ${activity.name} in ${activity.location}. (This would navigate to a detailed booking page.)`)}
+                                                className="bg-forest-green-600 hover:bg-forest-green-700 text-white px-5 py-2 rounded-full text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500"
+                                                aria-label={`Book ${activity.name}`}
+                                            >
+                                                Book Now
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-center text-steel-grey-600 text-lg py-10">No adventures found matching your criteria. Try adjusting your filters!</p>
+                    )}
+                </section>
+            );
+        };
+
+        const Pricing = () => (
+            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Our Flexible Pricing</h1>
+                <p className="text-center text-lg text-steel-grey-600 mb-8 max-w-2xl mx-auto">
+                    At Adrenaline Rizz, we believe in transparent pricing that offers great value for thrilling experiences. Prices vary based on activity, location, and season, but we always ensure competitive rates with safety and insurance included.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {/* Basic Package Example */}
+                    <div className="bg-white rounded-xl shadow-lg border-2 border-forest-green-500 p-8 text-center flex flex-col justify-between">
+                        <div>
+                            <h2 className="text-3xl font-bold text-forest-green-700 mb-4">Solo Explorer</h2>
+                            <p className="text-steel-grey-600 mb-6">Perfect for individual thrill-seekers.</p>
+                            <div className="text-5xl font-extrabold text-steel-grey-700 mb-6">
+                                Activity Dependent
+                            </div>
+                            <ul className="text-left text-steel-grey-600 mb-8 space-y-2">
+                                <li className="flex items-center"><i className="fas fa-check-circle text-forest-green-500 mr-2"></i>Basic Activity Slot</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-forest-green-500 mr-2"></i>Injury Insurance</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-forest-green-500 mr-2"></i>Verified Operator</li>
+                                <li className="flex items-center text-gray-400"><i className="fas fa-times-circle mr-2"></i>Premium Photos/Video</li>
+                                <li className="flex items-center text-gray-400"><i className="fas fa-times-circle mr-2"></i>Exclusive Group Discounts</li>
+                            </ul>
+                        </div>
+                        <button className="bg-forest-green-600 hover:bg-forest-green-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500" onClick={() => alert('Pricing varies per activity. Please check individual adventure pages for precise costs.')}>
+                            Learn More
+                        </button>
+                    </div>
+
+                    {/* Most Popular Package Example */}
+                    <div className="bg-terracotta-600 text-white rounded-xl shadow-xl border-2 border-terracotta-700 p-8 text-center flex flex-col justify-between transform scale-105 z-10">
+                        <div>
+                            <h2 className="text-3xl font-bold mb-4">Adventure Duo</h2>
+                            <p className="opacity-90 mb-6">Ideal for couples or friends seeking shared thrills.</p>
+                            <div className="text-5xl font-extrabold mb-6 text-light-brown-50">
+                                Activity Dependent
+                            </div>
+                            <ul className="text-left opacity-90 mb-8 space-y-2">
+                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>All Solo Explorer Benefits</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>Discount for Second Person</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>Premium Photo/Video Add-on Option</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>Priority Booking Access</li>
+                            </ul>
+                        </div>
+                        <button className="bg-light-brown-50 text-terracotta-700 font-bold py-3 px-6 rounded-full hover:bg-light-brown-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-light-brown-500" onClick={() => alert('Pricing varies per activity. Please check individual adventure pages for precise costs.')}>
+                            Choose Plan
+                        </button>
+                    </div>
+
+                    {/* Group Package Example */}
+                    <div className="bg-white rounded-xl shadow-lg border-2 border-deep-sky-blue-500 p-8 text-center flex flex-col justify-between">
+                        <div>
+                            <h2 className="text-3xl font-bold text-deep-sky-blue-700 mb-4">Group Thrills</h2>
+                            <p className="text-steel-grey-600 mb-6">Tailored for groups of 4+ looking for an epic outing.</p>
+                            <div className="text-5xl font-extrabold text-steel-grey-700 mb-6">
+                                Custom Quote
+                            </div>
+                            <ul className="text-left text-steel-grey-600 mb-8 space-y-2">
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>All Duo Benefits</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Significant Group Discounts</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Dedicated Group Coordinator</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Customizable Packages</li>
+                            </ul>
+                        </div>
+                        <button className="bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500" onClick={() => alert('Please contact us for a custom group quote!')}>
+                            Get a Quote
+                        </button>
+                    </div>
+                </div>
+
+                <p className="text-center text-steel-grey-600 text-sm mt-12">
+                    *All prices are subject to change and specific activity details. Please refer to the individual adventure pages for the most accurate pricing information.
+                </p>
+            </section>
+        );
+
+        const Blog = ({ blogPosts, setCurrentPage, setSelectedBlogPost }) => (
+            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Adrenaline Rizz Blog</h1>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {blogPosts.map(post => (
+                        <div key={post.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100 hover:shadow-xl transition-shadow duration-300 group">
+                            <img src={post.image} alt={post.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
+                            <div className="p-6">
+                                <h2 className="text-xl font-semibold text-steel-grey-700 mb-2">{post.title}</h2>
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                    {post.tags.map((tag, index) => (
+                                        <span key={index} className="bg-steel-grey-100 text-steel-grey-600 text-xs px-3 py-1 rounded-full">{tag}</span>
+                                    ))}
+                                </div>
+                                <p className="text-steel-grey-600 text-sm line-clamp-3 mb-4">{post.content.replace(/<[^>]+>/g, '')}</p>
+                                <button
+                                    onClick={() => { setSelectedBlogPost(post); setCurrentPage('blogPost'); }}
+                                    className="text-terracotta-600 hover:text-terracotta-700 font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-500 rounded-md"
+                                    aria-label={`Read more about ${post.title}`}
+                                >
+                                    Read More <i className="fas fa-arrow-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        );
+
+        const BlogPostDetail = ({ post, setCurrentPage }) => {
+            if (!post) {
+                return (
+                    <section className="container mx-auto py-16 px-6 text-center">
+                        <p className="text-xl text-steel-grey-600">Blog post not found.</p>
+                        <button
+                            onClick={() => setCurrentPage('blog')}
+                            className="mt-8 bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-2 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
+                            aria-label="Back to Blog"
+                        >
+                            Back to Blog
+                        </button>
+                    </section>
+                );
+            }
+
+            return (
+                <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                    <button
+                        onClick={() => setCurrentPage('blog')}
+                        className="text-deep-sky-blue-600 hover:text-deep-sky-blue-700 font-semibold mb-8 inline-flex items-center transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 rounded-md p-2 -ml-2"
+                        aria-label="Back to Blog"
+                    >
+                        <i className="fas fa-arrow-left mr-2"></i> Back to Blog
+                    </button>
+                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100">
+                        <img src={post.image} alt={post.title} className="w-full h-64 object-cover object-center" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/800x450/ccc/000?text=Image+Error"; }} />
+                        <div className="p-6 md:p-8 lg:p-10">
+                            <h1 className="text-3xl md:text-4xl font-bold text-steel-grey-700 mb-4">{post.title}</h1>
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                {post.tags.map((tag, index) => (
+                                    <span key={index} className="bg-steel-grey-100 text-steel-grey-600 text-sm px-4 py-1 rounded-full">{tag}</span>
+                                ))}
+                            </div>
+                            {/* dangerouslySetInnerHTML is used here to render HTML content from the blog post data.
+                                Be cautious when using this as it can expose you to XSS attacks if content is not trusted.
+                                In this context, the content is static and controlled by us. */}
+                            <div className="prose max-w-none text-steel-grey-600 text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: post.content }}></div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Contact = () => (
+            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Get in Touch</h1>
+
+                <div className="bg-white rounded-xl shadow-lg p-8 border border-steel-grey-100 max-w-3xl mx-auto">
+                    <p className="text-lg text-steel-grey-600 mb-8 text-center">
+                        Have a question, feedback, or a partnership inquiry? We'd love to hear from you!
+                    </p>
+
+                    <form className="space-y-6">
+                        <div>
+                            <label htmlFor="name" className="block text-steel-grey-700 font-semibold mb-2">Your Name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
+                                placeholder="John Doe"
+                                aria-label="Your Name"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="email" className="block text-steel-grey-700 font-semibold mb-2">Your Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
+                                placeholder="john.doe@example.com"
+                                aria-label="Your Email"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="subject" className="block text-steel-grey-700 font-semibold mb-2">Subject</label>
+                            <input
+                                type="text"
+                                id="subject"
+                                name="subject"
+                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
+                                placeholder="Inquiry about..."
+                                aria-label="Subject"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="message" className="block text-steel-grey-700 font-semibold mb-2">Message</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="6"
+                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 resize-y"
+                                placeholder="Your message here..."
+                                aria-label="Your Message"
+                            ></textarea>
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-terracotta-500"
+                            aria-label="Send Message"
+                            onClick={(e) => { e.preventDefault(); alert('Thank you for your message! We will get back to you soon.'); }}
+                        >
+                            Send Message
+                        </button>
+                    </form>
+
+                    <div className="mt-12 text-center text-steel-grey-600">
+                        <h3 className="text-xl font-semibold mb-4 text-steel-grey-700">Other Ways to Connect</h3>
+                        <p className="mb-2"><i className="fas fa-phone mr-2 text-deep-sky-blue-600"></i> Call Us: +91 98765 43210</p>
+                        <p className="mb-2"><i className="fas fa-envelope mr-2 text-deep-sky-blue-600"></i> Email: info@adrenalinerizz.com</p>
+                        <p className="mb-2"><i className="fas fa-map-marker-alt mr-2 text-deep-sky-blue-600"></i> Address: 123 Adventure Lane, Thrill City, India</p>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const FAQs = ({ faqs }) => {
+            const [openIndex, setOpenIndex] = useState(null);
+
+            const toggleFAQ = (index) => {
+                setOpenIndex(openIndex === index ? null : index);
+            };
+
+            const uniqueCategories = [...new Set(faqs.map(faq => faq.category))];
+
+            return (
+                <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                    <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Frequently Asked Questions</h1>
+
+                    {uniqueCategories.map(category => (
+                        <div key={category} className="mb-10">
+                            <h2 className="text-3xl font-semibold text-steel-grey-700 mb-6 border-b-2 border-terracotta-500 pb-2">{category}</h2>
+                            <div className="space-y-4">
+                                {faqs.filter(faq => faq.category === category).map((faq, index) => (
+                                    <div key={index} className="bg-white rounded-xl shadow-md border border-steel-grey-100 overflow-hidden">
+                                        <button
+                                            className="w-full text-left p-5 flex justify-between items-center text-steel-grey-700 font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 rounded-lg"
+                                            onClick={() => toggleFAQ(`${category}-${index}`)}
+                                            aria-expanded={openIndex === `${category}-${index}`}
+                                            aria-controls={`faq-answer-${category}-${index}`}
+                                        >
+                                            {faq.question}
+                                            <i className={`fas ${openIndex === `${category}-${index}` ? 'fa-minus' : 'fa-plus'} text-deep-sky-blue-600 transition-transform duration-300`}></i>
+                                        </button>
+                                        <div
+                                            id={`faq-answer-${category}-${index}`}
+                                            className={`px-5 pt-0 pb-5 text-steel-grey-600 transition-all duration-300 ease-in-out overflow-hidden ${openIndex === `${category}-${index}` ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}
+                                            style={{ maxHeight: openIndex === `${category}-${index}` ? '1000px' : '0' }} /* Arbitrary large max-height for smooth transition */
+                                        >
+                                            <p className="mt-2">{faq.answer}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+
+                    <div className="mt-12 text-center text-steel-grey-600">
+                        <p className="text-lg mb-4">Can't find your answer? Don't hesitate to reach out to us!</p>
+                        <button
+                            onClick={() => window.setPageAndPost('contact')}
+                            className="bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-terracotta-500"
+                            aria-label="Contact Us"
+                        >
+                            Contact Our Support Team
+                        </button>
+                    </div>
+                </section>
+            );
+        };
+
+        const Legal = () => (
+            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
+                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Legal Information</h1>
+
+                <div className="bg-white rounded-xl shadow-lg p-8 border border-steel-grey-100 max-w-4xl mx-auto prose">
+                    <h2 className="text-3xl font-bold text-steel-grey-700 mb-6">Privacy Policy</h2>
+                    <p><strong>Last Updated: June 21, 2025</strong></p>
+                    <p>Adrenaline Rizz ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="#" onClick={(e) => { e.preventDefault(); window.setPageAndPost('home'); }} class="text-deep-sky-blue-600 hover:underline">www.adrenalinerizz.com</a>, including any other media form, media channel, mobile website, or mobile application related or connected thereto (collectively, the "Site"). Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the Site.</p>
+                    <h3>1. Collection of Your Information</h3>
+                    <p>We may collect information about you in a variety of ways. The information we may collect on the Site includes:</p>
+                    <h4>Personal Data</h4>
+                    <ul>
+                        <li><strong>Voluntarily provided information:</strong> This includes your name, address, email address, phone number, and demographic information, that you voluntarily give to us when you register with the Site or when you choose to participate in various activities related to the Site, such as online chat and message boards.</li>
+                        <li><strong>Financial Data:</strong> Information regarding your payment method (e.g., valid credit card number, card brand, expiration date) that we may collect when you purchase, order, return, exchange, or request information about our services from the Site.</li>
+                    </ul>
+                    <h4>Derivative Data</h4>
+                    <p>Information our servers automatically collect when you access the Site, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the Site.</p>
+
+                    <h2 className="text-3xl font-bold text-steel-grey-700 mt-12 mb-6">Terms of Service</h2>
+                    <p><strong>Last Updated: June 21, 2025</strong></p>
+                    <p>These Terms of Service ("Terms") govern your use of the Adrenaline Rizz website and services. By accessing or using our Site, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, please do not use our Site or services.</p>
+                    <h3>1. Acceptance of Terms</h3>
+                    <p>By using the services, you confirm that you are at least 18 years of age or have legal parental or guardian consent to enter into these Terms, and are fully able and competent to enter into the terms, conditions, obligations, affirmations, representations, and warranties set forth in these Terms, and to abide by and comply with these Terms.</p>
+                    <h3>2. Services Overview</h3>
+                    <p>Adrenaline Rizz provides an online platform that connects individuals seeking adventure sports activities ("Users") with third-party adventure activity operators ("Operators"). We facilitate the booking process and provide information about various activities. We do not directly operate any adventure activities.</p>
+                    <h3>3. Booking and Payments</h3>
+                    <ul>
+                        <li>All bookings made through Adrenaline Rizz are subject to the availability of the Operators.</li>
+                        <li>Prices for activities are displayed on the Site and are subject to change.</li>
+                        <li>Payments are processed securely through third-party payment gateways. Adrenaline Rizz does not store your full financial details.</li>
+                    </ul>
+
+                    <h2 className="text-3xl font-bold text-steel-grey-700 mt-12 mb-6">Refund & Cancellation Policy</h2>
+                    <p><strong>Last Updated: June 21, 2025</strong></p>
+                    <p>Understanding our Refund & Cancellation Policy is crucial for all bookings made through Adrenaline Rizz. Please read carefully.</p>
+                    <h3>1. Free Cancellation Period</h3>
+                    <p>Most activities offer free cancellation up to <strong>48 hours</strong> before the scheduled activity start time. This allows for a full refund (excluding any non-refundable booking fees, if applicable).</p>
+                    <h3>2. Cancellations within 48 Hours</h3>
+                    <p>Cancellations made within 48 hours of the activity start time are generally non-refundable. However, exceptions may be made in cases of documented emergencies or extenuating circumstances, subject to operator discretion.</p>
+                    <h3>3. Operator Cancellation</h3>
+                    <p>If an activity is cancelled by the operator due to unforeseen circumstances (e.g., weather conditions, safety concerns, insufficient participants), you will be offered a full refund or the option to reschedule the activity. We will notify you as soon as possible in such cases.</p>
+                    <h3>4. Rescheduling</h3>
+                    <p>Rescheduling requests are subject to operator availability and may incur additional charges, especially if requested within 48 hours of the original booking time.</p>
+
+                    <h2 className="text-3xl font-bold text-steel-grey-700 mt-12 mb-6">Safety Guidelines</h2>
+                    <p><strong>Last Updated: June 21, 2025</strong></p>
+                    <p>Your safety is our utmost priority at Adrenaline Rizz. While we partner with verified operators, it is essential for you to understand and adhere to general safety guidelines.</p>
+                    <h3>1. Operator Instructions</h3>
+                    <p>Always listen to and follow all instructions provided by your activity operator and instructors. They are trained professionals.</p>
+                    <h3>2. Medical Conditions</h3>
+                    <p>Inform your operator of any medical conditions, allergies, or physical limitations prior to the activity. Consult your doctor if you have any doubts about your fitness for an activity.</p>
+                    <h3>3. Equipment Check</h3>
+                    <p>Ensure your safety equipment is properly fitted and checked by an instructor before starting any activity.</p>
+                    <h3>4. Alcohol & Drugs</h3>
+                    <p>Consumption of alcohol or recreational drugs is strictly prohibited before and during any adventure activity.</p>
+                    <h3>5. Personal Belongings</h3>
+                    <p>Avoid carrying loose jewelry, phones, or other valuables during activities that could get lost or damaged.</p>
+                    <p>For specific safety guidelines related to each activity, please refer to the activity details page or contact us.</p>
+                </div>
+            </section>
+        );
+
+        // --- Main App Component ---
+        const App = () => {
+            const [currentPage, setCurrentPage] = useState('home');
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [selectedBlogPost, setSelectedBlogPost] = useState(null);
+            const [cookieConsent, setCookieConsent] = useState(localStorage.getItem('cookieConsent') === 'true');
+
+            // Make state setters globally accessible for inline onclicks in dangerouslySetInnerHTML
+            useEffect(() => {
+                appSetCurrentPage = setCurrentPage;
+                appSetSelectedBlogPost = setSelectedBlogPost;
+                // Clean up global references on component unmount (though this app won't unmount in this setup)
+                return () => {
+                    appSetCurrentPage = null;
+                    appSetSelectedBlogPost = null;
+                };
+            }, []); // Empty dependency array means this runs once on mount
+
+            const handleAcceptCookies = () => {
+                localStorage.setItem('cookieConsent', 'true');
+                setCookieConsent(true);
+            };
+
+            const handleDeclineCookies = () => {
+                localStorage.setItem('cookieConsent', 'false');
+                setCookieConsent(false);
+                // In a real app, you'd add logic here to remove/disable non-essential cookies.
+            };
+
+            // Conditional rendering based on currentPage state
+            const renderPage = () => {
+                switch (currentPage) {
+                    case 'home':
+                        return <Home setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} activities={activities} testimonials={testimonials} blogPosts={blogPosts} />;
+                    case 'about':
+                        return <About teamMembers={teamMembers} />;
+                    case 'adventures':
+                        return <Adventures activities={activities} setCurrentPage={setCurrentPage} />;
+                    case 'pricing':
+                        return <Pricing />;
+                    case 'blog':
+                        return <Blog blogPosts={blogPosts} setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />;
+                    case 'blogPost':
+                        return <BlogPostDetail post={selectedBlogPost} setCurrentPage={setCurrentPage} />;
+                    case 'contact':
+                        return <Contact />;
+                    case 'faqs':
+                        return <FAQs faqs={faqs} />;
+                    case 'legal':
+                        return <Legal />;
+                    default:
+                        return <Home setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} activities={activities} testimonials={testimonials} blogPosts={blogPosts} />;
+                }
+            };
+
+            return (
+                <>
+                    <Navbar setCurrentPage={setCurrentPage} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} setSelectedBlogPost={setSelectedBlogPost} />
+                    <main className="flex-grow">
+                        {renderPage()}
+                    </main>
+                    <Footer setCurrentPage={setCurrentPage} />
+                    {!cookieConsent && <CookieConsentBanner onAccept={handleAcceptCookies} onDecline={handleDeclineCookies} />}
+                </>
+            );
+        };
+
+        // Render the main App component into the root div
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
