@@ -309,9 +309,6 @@
 
         const teamMembers = [
             { name: 'Udhav Bindal', title: 'Founder', bio: 'SRCC alumnus, passionate traveler, and a relentless seeker of change. Udhav founded Adrenaline Rizz to revolutionize India\'s adventure industry.', image: 'https://i.postimg.cc/fTtmGWGw/65a00adb886f83d02129e022-3.jpg' },
-            { name: 'Dr. Anya Sharma', title: 'Chief Safety Officer', bio: 'An ex-army veteran with extensive experience in high-altitude rescue and disaster management. Ensures all operations meet global safety standards.', image: 'https://placehold.co/200x200/6B8E23/FFF?text=Anya+Sharma', alt: 'Dr. Anya Sharma' },
-            { name: 'Sameer Khan', title: 'Head of Operator Relations', bio: 'With a background in hospitality and logistics, Sameer builds strong partnerships with our adventure operators, ensuring quality and reliability.', image: 'https://placehold.co/200x200/A9A9A9/FFF?text=Sameer+Khan', alt: 'Sameer Khan' },
-            { name: 'Meera Rajput', title: 'Marketing Lead', bio: 'A creative force driving Adrenaline Rizz\'s brand vision. Meera crafts compelling campaigns that connect thrill-seekers with unforgettable experiences.', image: 'https://placehold.co/200x200/DDA0DD/FFF?text=Meera+Rajput', alt: 'Meera Rajput' },
         ];
 
         const faqs = [
@@ -414,8 +411,8 @@
                     <div className="col-span-1">
                         <h4 className="font-semibold text-lg mb-4 text-light-brown-50">Contact Info</h4>
                         <p className="text-sm mb-2"><i className="fas fa-map-marker-alt mr-2"></i>123 Adventure Lane, Thrill City, India</p>
-                        <p className="text-sm mb-2"><i className="fas fa-envelope mr-2"></i>info@adrenalinerizz.com</p>
-                        <p className="text-sm mb-2"><i className="fas fa-phone mr-2"></i>+91 98765 43210</p>
+                        <p className="text-sm mb-2"><i className="fas fa-envelope mr-2"></i>udhavbindal29@gmail.com</p>
+                        <p className="text-sm mb-2"><i className="fas fa-phone mr-2"></i>+91 7417565933</p>
                     </div>
                 </div>
                 <div className="border-t border-terracotta-600 mt-8 pt-6 text-center text-sm">
@@ -488,7 +485,7 @@
                                     <div className="flex items-center justify-between">
                                         <span className="text-terracotta-600 font-bold text-lg">{activity.price}</span>
                                         <button
-                                            onClick={() => setCurrentPage('adventures')}
+                                            onClick={() => alert(`Booking for ${activity.name} in ${activity.location}. (This would navigate to a detailed booking page.)`)}
                                             className="bg-forest-green-600 hover:bg-forest-green-700 text-white px-5 py-2 rounded-full text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500"
                                             aria-label={`Book ${activity.name}`}
                                         >
@@ -981,8 +978,8 @@
 
                     <div className="mt-12 text-center text-steel-grey-600">
                         <h3 className="text-xl font-semibold mb-4 text-steel-grey-700">Other Ways to Connect</h3>
-                        <p className="mb-2"><i className="fas fa-phone mr-2 text-deep-sky-blue-600"></i> Call Us: +91 98765 43210</p>
-                        <p className="mb-2"><i className="fas fa-envelope mr-2 text-deep-sky-blue-600"></i> Email: info@adrenalinerizz.com</p>
+                        <p className="mb-2"><i className="fas fa-phone mr-2 text-deep-sky-blue-600"></i> Call Us: +91 7417565933</p>
+                        <p className="mb-2"><i className="fas fa-envelope mr-2 text-deep-sky-blue-600"></i> Email: udhavbindal29@gmail.com</p>
                         <p className="mb-2"><i className="fas fa-map-marker-alt mr-2 text-deep-sky-blue-600"></i> Address: 123 Adventure Lane, Thrill City, India</p>
                     </div>
                 </div>
