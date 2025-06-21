@@ -368,211 +368,108 @@
             </nav>
         );
 
-        const Footer = ({ setCurrentPage }) => (
-            <footer className="bg-terracotta-700 text-white py-8 px-6 mt-12 rounded-t-3xl shadow-xl">
+        const Footer = ({ setCurrentPage, setSelectedBlogPost }) => (
+            <footer className="bg-forest-green-700 text-white py-8 px-6 mt-auto">
                 <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div className="col-span-1">
-                        <h3 className="text-2xl font-bold mb-4 text-light-brown-50">Adrenaline Rizz</h3>
-                        <p className="text-sm">Your gateway to the most thrilling adventure sports in India. Safety, exhilaration, and unforgettable memories.</p>
+                    {/* Brand Info */}
+                    <div className="col-span-1 md:col-span-2">
+                        <h3 className="text-3xl font-bold mb-4 text-light-brown-50">Adrenaline Rizz</h3>
+                        <p className="text-sm text-light-brown-50 leading-relaxed">
+                            Your ultimate gateway to India's most exhilarating adventures. We connect thrill-seekers with verified operators, ensuring safety, unforgettable experiences, and peace of mind.
+                        </p>
                         <div className="flex space-x-4 mt-4">
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white hover:text-light-brown-50 transition-colors duration-300">
-                                <i className="fab fa-facebook-f text-xl"></i>
-                            </a>
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-white hover:text-light-brown-50 transition-colors duration-300">
-                                <i className="fab fa-twitter text-xl"></i>
-                            </a>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-white hover:text-light-brown-50 transition-colors duration-300">
-                                <i className="fab fa-instagram text-xl"></i>
-                            </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-white hover:text-light-brown-50 transition-colors duration-300">
-                                <i className="fab fa-linkedin-in text-xl"></i>
-                            </a>
+                            <a href="#" aria-label="Facebook" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-facebook-f fa-lg"></i></a>
+                            <a href="#" aria-label="Twitter" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-twitter fa-lg"></i></a>
+                            <a href="#" aria-label="Instagram" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-instagram fa-lg"></i></a>
+                            <a href="#" aria-label="LinkedIn" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-linkedin-in fa-lg"></i></a>
                         </div>
                     </div>
 
-                    <div className="col-span-1">
-                        <h4 className="font-semibold text-lg mb-4 text-light-brown-50">Quick Links</h4>
+                    {/* Quick Links */}
+                    <div>
+                        <h4 className="text-xl font-semibold mb-4 text-light-brown-50">Quick Links</h4>
                         <ul className="space-y-2">
-                            <li><a href="#" onClick={() => setCurrentPage('about')} className="hover:underline text-sm">About Us</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('adventures')} className="hover:underline text-sm">Adventures</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('blog')} className="hover:underline text-sm">Blog</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('joinus')} className="hover:underline text-sm">Join Us</a></li> {/* Added Join Us link */}
-                            <li><a href="#" onClick={() => setCurrentPage('contact')} className="hover:underline text-sm">Contact Us</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('faqs')} className="hover:underline text-sm">FAQs</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Legal</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); }}>Home</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}>Adventures</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('about'); setSelectedBlogPost(null); }}>About Us</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('blog'); setSelectedBlogPost(null); }}>Blog</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('faqs'); setSelectedBlogPost(null); }}>FAQs</a></li>
                         </ul>
                     </div>
 
-                    <div className="col-span-1">
-                        <h4 className="font-semibold text-lg mb-4 text-light-brown-50">Legal</h4>
+                    {/* Legal & Support */}
+                    <div>
+                        <h4 className="text-xl font-semibold mb-4 text-light-brown-50">Support</h4>
                         <ul className="space-y-2">
-                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Privacy Policy</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Terms of Service</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Refund & Cancellation</a></li>
-                            <li><a href="#" onClick={() => setCurrentPage('legal')} className="hover:underline text-sm">Safety Guidelines</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('contact'); setSelectedBlogPost(null); }}>Contact Us</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); }}>Privacy Policy</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); }}>Terms of Service</a></li>
+                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); }}>Refund Policy</a></li>
                         </ul>
-                    </div>
-
-                    <div className="col-span-1">
-                        <h4 className="font-semibold text-lg mb-4 text-light-brown-50">Contact Info</h4>
-                        <p className="text-sm mb-2"><i className="fas fa-map-marker-alt mr-2"></i>123 Adventure Lane, Thrill City, India</p>
-                        <p className="text-sm mb-2"><i className="fas fa-envelope mr-2"></i>udhavbindal29@gmail.com</p> {/* Updated email */}
-                        <p className="text-sm mb-2"><i className="fas fa-phone mr-2"></i>+91 7417565933</p> {/* Updated phone */}
                     </div>
                 </div>
-                <div className="border-t border-terracotta-600 mt-8 pt-6 text-center text-sm">
+                <div className="container mx-auto border-t border-forest-green-600 mt-8 pt-8 text-center text-sm text-light-brown-100">
                     &copy; {new Date().getFullYear()} Adrenaline Rizz. All rights reserved.
                 </div>
             </footer>
         );
 
-        const CookieConsentBanner = ({ onAccept, onDecline }) => (
-            <div className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4 flex flex-col md:flex-row items-center justify-between z-50 shadow-lg">
-                <p className="text-sm mb-3 md:mb-0 md:mr-4 text-center md:text-left">
-                    We use cookies to enhance your experience. By continuing to visit this site, you agree to our <a href="#" onClick={(e) => { e.preventDefault(); window.setPageAndPost('legal'); }} className="text-deep-sky-blue-500 underline hover:text-deep-sky-blue-600">Cookie Policy</a>.
-                </p>
-                <div className="flex space-x-3">
-                    <button
-                        onClick={onAccept}
-                        className="bg-forest-green-600 hover:bg-forest-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500"
-                        aria-label="Accept Cookies"
-                    >
-                        Accept
-                    </button>
-                    <button
-                        onClick={onDecline}
-                        className="bg-terracotta-600 hover:bg-terracotta-700 text-white px-4 py-2 rounded-lg text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500"
-                        aria-label="Decline Cookies"
-                    >
-                        Decline
-                    </button>
-                </div>
-            </div>
-        );
-
-
         // --- Page Components ---
 
-        const Home = ({ setCurrentPage, setSelectedBlogPost, activities, testimonials, blogPosts }) => (
-            <>
-                {/* Hero Section */}
-                <section className="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-center text-white bg-cover bg-center rounded-b-3xl shadow-lg"
-                    style={{ backgroundImage: "url('https://i.postimg.cc/MKWMcFzP/thrilling-cliff-jump-om4bulq3g8dw2vne.jpg')", backgroundAttachment: 'fixed' }}
-                    role="img" aria-label="Adventurers enjoying a thrilling activity">
-                    <div className="absolute inset-0 bg-black opacity-50 rounded-b-3xl"></div>
-                    <div className="relative z-10 p-6 max-w-4xl mx-auto animate-fade-in-up">
-                        <h1 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">
-                            Your Next Thrill <span className="text-terracotta-500">Starts Here</span>
-                        </h1>
-                        <p className="text-lg md:text-xl mb-8 font-light">
-                            Discover India's most exhilarating adventure sports – booked securely with verified operators and insurance included.
-                        </p>
-                        <button
-                            onClick={() => setCurrentPage('adventures')}
-                            className="bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 px-8 rounded-full text-lg md:text-xl shadow-lg transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-terracotta-500"
-                            aria-label="Explore Adventures"
-                        >
-                            Explore Adventures
-                        </button>
-                    </div>
-                </section>
+        const HeroSection = ({ setCurrentPage, setSelectedBlogPost }) => (
+            <section className="relative h-[60vh] md:h-[70vh] lg:h-[80vh] bg-cover bg-center flex items-center justify-center text-center px-4 rounded-b-lg shadow-lg"
+                style={{ backgroundImage: 'url("https://i.postimg.cc/MKWMcFzP/thrilling-cliff-jump-om4bulq3g8dw2vne.jpg")' }}>
+                <div className="absolute inset-0 bg-black opacity-40 rounded-b-lg"></div> {/* Overlay */}
+                <div className="relative z-10 text-white animate-fade-in-up">
+                    <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-4 drop-shadow-md font-['Montserrat']">
+                        Your Next Thrill Starts Here.
+                    </h1>
+                    <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto drop-shadow-sm font-['Lato']">
+                        Discover India's most exhilarating adventures with verified operators, guaranteed safety, and unforgettable experiences.
+                    </p>
+                    <button
+                        className="bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50"
+                        onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}
+                    >
+                        Explore Adventures
+                    </button>
+                </div>
+            </section>
+        );
 
-                {/* Featured Activities Section */}
-                <section className="container mx-auto py-16 px-6 animate-fade-in-up delay-200">
-                    <h2 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Featured Adventures</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {activities.filter(activity => activity.featured).map(activity => (
-                            <div key={activity.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100 hover:shadow-xl transition-shadow duration-300 group">
-                                <img src={activity.image} alt={activity.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
-                                <div className="p-6">
-                                    <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">{activity.name}</h3>
-                                    <p className="text-steel-grey-600 text-sm mb-3"><i className="fas fa-map-marker-alt mr-1"></i> {activity.location}</p>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-terracotta-600 font-bold text-lg">{activity.price}</span>
-                                        <button
-                                            onClick={() => alert(`Booking for ${activity.name} in ${activity.location}. (This would navigate to a detailed booking page.)`)}
-                                            className="bg-forest-green-600 hover:bg-forest-green-700 text-white px-5 py-2 rounded-full text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500"
-                                            aria-label={`Book ${activity.name}`}
-                                        >
-                                            Book Now
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="text-center mt-12">
-                        <button
-                            onClick={() => setCurrentPage('adventures')}
-                            className="bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500"
-                            aria-label="View All Adventures"
-                        >
-                            View All Adventures
-                        </button>
-                    </div>
-                </section>
+        const FeaturedActivities = ({ activities, setCurrentPage, setSelectedBlogPost }) => {
+            const featured = activities.filter(activity => activity.featured);
 
-                {/* Why Choose Us Section */}
-                <section className="bg-forest-green-500 text-white py-16 px-6 rounded-3xl shadow-xl">
-                    <div className="container mx-auto text-center animate-fade-in-up delay-400">
-                        <h2 className="text-4xl font-bold mb-12">Why Choose Adrenaline Rizz?</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                            <div className="p-6 bg-forest-green-600 rounded-xl shadow-lg flex flex-col items-center">
-                                <i className="fas fa-shield-alt text-5xl text-light-brown-50 mb-4"></i>
-                                <h3 className="text-2xl font-semibold mb-3">Verified Safety</h3>
-                                <p className="text-center text-sm">We partner only with operators who meet stringent international safety standards, ensuring your peace of mind.</p>
-                            </div>
-                            <div className="p-6 bg-forest-green-600 rounded-xl shadow-lg flex flex-col items-center">
-                                <i className="fas fa-file-invoice text-5xl text-light-brown-50 mb-4"></i>
-                                <h3 className="text-2xl font-semibold mb-3">Insurance Included</h3>
-                                <p className="text-center text-sm">Every booking comes with basic injury insurance, so you can focus purely on the thrill of the adventure.</p>
-                            </div>
-                            <div className="p-6 bg-forest-green-600 rounded-xl shadow-lg flex flex-col items-center">
-                                <i className="fas fa-female text-5xl text-light-brown-50 mb-4"></i>
-                                <h3 className="text-2xl font-semibold mb-3">Empowering Adventures</h3>
-                                <p className="text-center text-sm">Access to female instructors and staff options to ensure comfort and empowerment for all adventurers.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Testimonials Section */}
-                <section className="container mx-auto py-16 px-6 animate-fade-in-up delay-200">
-                    <h2 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Hear From Our Thrill-Seekers</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {testimonials.map(testimonial => (
-                            <div key={testimonial.id} className="bg-white rounded-xl shadow-lg p-6 border border-steel-grey-100 flex flex-col items-center text-center hover:shadow-xl transition-shadow duration-300">
-                                <div className="w-full h-40 bg-gray-200 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                                    <img src={testimonial.video} alt={`Video testimonial from ${testimonial.name}`} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/300x200/ccc/000?text=Video+Placeholder"; }} />
-                                </div>
-                                <p className="text-lg italic text-steel-grey-700 mb-4">"{testimonial.text}"</p>
-                                <p className="font-semibold text-terracotta-600">- {testimonial.name} <span className="text-steel-grey-600">({testimonial.activity})</span></p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* Latest from Blog Section */}
-                <section className="bg-light-brown-50 py-16 px-6 rounded-t-3xl shadow-inner">
-                    <div className="container mx-auto animate-fade-in-up delay-400">
-                        <h2 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Latest from Our Blog</h2>
+            return (
+                <section className="py-16 bg-light-brown-50 animate-fade-in-up delay-200">
+                    <div className="container mx-auto px-6">
+                        <h2 className="text-4xl font-bold text-center text-forest-green-700 mb-12 font-['Montserrat']">
+                            Featured Adventures
+                        </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {blogPosts.slice(0, 3).map(post => (
-                                <div key={post.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-light-brown-100 hover:shadow-xl transition-shadow duration-300 group">
-                                    <img src={post.image} alt={post.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">{post.title}</h3>
-                                        <div className="flex flex-wrap gap-2 mb-3">
-                                            {post.tags.map((tag, index) => (
-                                                <span key={index} className="bg-steel-grey-100 text-steel-grey-600 text-xs px-3 py-1 rounded-full">{tag}</span>
-                                            ))}
+                            {featured.map(activity => (
+                                <div key={activity.id} className="bg-white rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer border border-steel-grey-100"
+                                     onClick={() => { /* Implement specific activity detail page navigation later */ }}>
+                                    <div className="relative h-60 overflow-hidden">
+                                        <img src={activity.image} alt={activity.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x300/CCCCCC/000000?text=${activity.name.replace(/\s/g, '+')}`; }} />
+                                        <div className="absolute top-4 left-4 bg-terracotta-500 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
+                                            Featured
                                         </div>
-                                        <p className="text-steel-grey-600 text-sm line-clamp-3 mb-4">{post.content.replace(/<[^>]+>/g, '')}</p> {/* Strip HTML for snippet */}
+                                    </div>
+                                    <div className="p-6">
+                                        <h3 className="text-2xl font-bold text-forest-green-600 mb-2 font-['Poppins']">
+                                            {activity.name}
+                                        </h3>
+                                        <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed">{activity.description}</p>
+                                        <div className="flex justify-between items-center text-lg font-semibold text-terracotta-700">
+                                            <span>{activity.location}</span>
+                                            <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.price}</span>
+                                        </div>
                                         <button
-                                            onClick={() => { setSelectedBlogPost(post); setCurrentPage('blogPost'); }}
-                                            className="text-terracotta-600 hover:text-terracotta-700 font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-500 rounded-md"
+                                            className="mt-6 w-full bg-forest-green-500 hover:bg-forest-green-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg focus:outline-none focus:ring-4 focus:ring-forest-green-500 focus:ring-opacity-50"
+                                            onClick={(e) => { e.stopPropagation(); setCurrentPage('adventures'); setSelectedBlogPost(null); }}
                                         >
-                                            Read More <i className="fas fa-arrow-right ml-1"></i>
+                                            View Details
                                         </button>
                                     </div>
                                 </div>
@@ -580,752 +477,881 @@
                         </div>
                         <div className="text-center mt-12">
                             <button
-                                onClick={() => setCurrentPage('blog')}
-                                className="bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500"
-                                aria-label="View All Blog Posts"
+                                className="bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50"
+                                onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}
                             >
-                                View All Blog Posts
+                                View All Adventures <i className="fas fa-arrow-right ml-2"></i>
                             </button>
                         </div>
                     </div>
                 </section>
-            </>
-        );
+            );
+        };
 
-        const About = ({ teamMembers }) => (
-            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">About Adrenaline Rizz</h1>
-
-                <div className="mb-16 bg-white p-8 rounded-xl shadow-lg border border-steel-grey-100">
-                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-6 text-center">Our Mission</h2>
-                    <p className="text-lg text-steel-grey-600 leading-relaxed text-center max-w-3xl mx-auto">
-                        At Adrenaline Rizz, our mission is to redefine adventure tourism in India by providing a seamless, safe, and exhilarating platform for thrill-seekers. We connect you with India's best-verified operators, ensuring every adventure is not just a booking, but a meticulously curated, unforgettable experience. We prioritize safety, transparency, and empowerment, making adrenaline accessible to everyone.
-                    </p>
-                </div>
-
-                <div className="mb-16">
-                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-8 text-center">Our Values</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-fist-raised text-4xl text-terracotta-600 mt-1"></i>
-                            <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Exhilaration</h3>
-                                <p className="text-steel-grey-600 text-sm">Igniting the spirit of adventure and pushing boundaries to create unforgettable thrills.</p>
+        const WhyChooseUs = () => (
+            <section className="py-16 bg-gradient-to-r from-forest-green-600 to-forest-green-700 text-white animate-fade-in-up delay-400">
+                <div className="container mx-auto px-6 text-center">
+                    <h2 className="text-4xl font-bold mb-12 font-['Montserrat']">Why Choose Adrenaline Rizz?</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div className="flex flex-col items-center p-6 bg-forest-green-500 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+                            <div className="bg-terracotta-500 p-4 rounded-full mb-4 shadow-lg">
+                                <i className="fas fa-shield-alt fa-3x text-white"></i>
                             </div>
+                            <h3 className="text-2xl font-semibold mb-3 font-['Poppins']">Verified Operators</h3>
+                            <p className="text-light-brown-50 text-center leading-relaxed">
+                                We partner only with rigorously vetted and safety-certified adventure operators. Your safety is our utmost priority.
+                            </p>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-handshake text-4xl text-forest-green-600 mt-1"></i>
-                            <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Trust & Safety</h3>
-                                <p className="text-steel-grey-600 text-sm">Uncompromising commitment to safety standards and partnering with only the most reliable operators.</p>
+                        <div className="flex flex-col items-center p-6 bg-forest-green-500 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+                            <div className="bg-terracotta-500 p-4 rounded-full mb-4 shadow-lg">
+                                <i className="fas fa-hand-holding-medical fa-3x text-white"></i>
                             </div>
+                            <h3 className="text-2xl font-semibold mb-3 font-['Poppins']">Injury Insurance Included</h3>
+                            <p className="text-light-brown-50 text-center leading-relaxed">
+                                Every booking comes with basic accidental injury insurance, giving you peace of mind on your adventure.
+                            </p>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-users text-4xl text-deep-sky-blue-600 mt-1"></i>
-                            <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Empowerment</h3>
-                                <p className="text-steel-grey-600 text-sm">Fostering confidence and providing inclusive opportunities for all adventurers, including female staff options.</p>
+                        <div className="flex flex-col items-center p-6 bg-forest-green-500 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+                            <div className="bg-terracotta-500 p-4 rounded-full mb-4 shadow-lg">
+                                <i className="fas fa-female fa-3x text-white"></i>
                             </div>
+                            <h3 className="text-2xl font-semibold mb-3 font-['Poppins']">Female Instructors</h3>
+                            <p className="text-light-brown-50 text-center leading-relaxed">
+                                Options for female instructors available for many activities, ensuring comfort and inclusivity for all.
+                            </p>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-lightbulb text-4xl text-amber-500 mt-1"></i>
-                            <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Innovation</h3>
-                                <p className="text-steel-grey-600 text-sm">Leveraging technology to simplify booking, enhance experiences, and personalize recommendations.</p>
-                            </div>
-                        </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-heart text-4xl text-red-500 mt-1"></i>
-                            <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Passion</h3>
-                                <p className="text-steel-grey-600 text-sm">Driven by a deep love for adventure and a desire to share its transformative power with the world.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-8 text-center">Meet Our Team</h2>
-                    <div className="flex justify-center"> {/* Use flexbox to center the single profile */}
-                        {teamMembers.map((member, index) => (
-                            <div key={index} className="bg-white p-6 rounded-xl shadow-lg border border-steel-grey-100 flex flex-col items-center text-center max-w-2xl w-full"> {/* Increased max-w and full width */}
-                                <img
-                                    src={member.image}
-                                    alt={member.alt || member.name}
-                                    className="w-40 h-40 rounded-full object-cover mb-4 border-4 border-terracotta-500"
-                                    onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/160x160/ccc/000?text=Profile"; }}
-                                />
-                                <h3 className="text-2xl font-semibold text-steel-grey-700 mb-1">{member.name}</h3> {/* Increased font size */}
-                                <p className="text-xl text-terracotta-600 font-medium mb-3">{member.title}</p> {/* Increased font size */}
-                                <p className="text-lg text-steel-grey-600 max-w-prose">{member.bio}</p> {/* Adjusted max-width for bio text */}
-                            </div>
-                        ))}
                     </div>
                 </div>
             </section>
         );
 
-        const Adventures = ({ activities, setCurrentPage }) => {
+        const TestimonialsSection = ({ testimonials }) => {
+            const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setCurrentTestimonialIndex((prevIndex) =>
+                        (prevIndex + 1) % testimonials.length
+                    );
+                }, 7000); // Change testimonial every 7 seconds
+                return () => clearInterval(interval);
+            }, [testimonials.length]);
+
+            const currentTestimonial = testimonials[currentTestimonialIndex];
+
+            return (
+                <section className="py-16 bg-light-brown-100 animate-fade-in-up">
+                    <div className="container mx-auto px-6 text-center">
+                        <h2 className="text-4xl font-bold text-forest-green-700 mb-12 font-['Montserrat']">
+                            What Our Adventurers Say
+                        </h2>
+                        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-xl p-8 md:p-10 relative">
+                            {/* Quote icon */}
+                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-terracotta-500 p-4 rounded-full shadow-lg">
+                                <i className="fas fa-quote-right fa-2x text-white"></i>
+                            </div>
+
+                            <p className="text-steel-grey-700 text-lg md:text-xl italic mb-6 leading-relaxed">
+                                "{currentTestimonial.text}"
+                            </p>
+                            <p className="text-terracotta-600 font-bold text-xl mb-1">
+                                {currentTestimonial.name}
+                            </p>
+                            <p className="text-steel-grey-600 text-md">
+                                Adventure: <span className="font-semibold">{currentTestimonial.activity}</span>
+                            </p>
+
+                            {/* Navigation Dots */}
+                            <div className="flex justify-center mt-6 space-x-2">
+                                {testimonials.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                                            index === currentTestimonialIndex ? 'bg-terracotta-500 w-5' : 'bg-steel-grey-100'
+                                        }`}
+                                        onClick={() => setCurrentTestimonialIndex(index)}
+                                        aria-label={`Go to testimonial ${index + 1}`}
+                                    ></button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const CallToActionSection = ({ setCurrentPage, setSelectedBlogPost }) => (
+            <section className="py-20 bg-deep-sky-blue-500 text-white text-center rounded-t-lg shadow-xl">
+                <div className="container mx-auto px-6 animate-fade-in-up delay-200">
+                    <h2 className="text-4xl md:text-5xl font-extrabold mb-6 font-['Montserrat']">
+                        Ready for Your Next Great Adventure?
+                    </h2>
+                    <p className="text-lg md:text-xl mb-10 max-w-3xl mx-auto font-['Lato']">
+                        Whether you're a seasoned thrill-seeker or looking to try something new, Adrenaline Rizz has the perfect experience for you.
+                    </p>
+                    <button
+                        className="bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-4 px-10 rounded-full text-xl md:text-2xl transition duration-300 ease-in-out transform hover:scale-105 shadow-xl focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-70"
+                        onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}
+                    >
+                        Book Your Thrill Today! <i className="fas fa-bolt ml-3"></i>
+                    </button>
+                </div>
+            </section>
+        );
+
+        const AboutUsPage = ({ teamMembers, setCurrentPage, setSelectedBlogPost }) => (
+            <div className="container mx-auto py-16 px-6">
+                <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                    About Adrenaline Rizz
+                </h1>
+
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-200">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins']">Our Story</h2>
+                    <p className="text-lg text-steel-grey-700 leading-relaxed mb-4">
+                        Adrenaline Rizz was born from a passion for adventure and a vision to make India's incredible thrill sports accessible and safe for everyone. Founded by a team of avid adventurers, we realized the need for a platform that not only offers a wide array of activities but also prioritizes safety, transparency, and an unparalleled booking experience.
+                    </p>
+                    <p className="text-lg text-steel-grey-700 leading-relaxed">
+                        We believe that adventure is more than just a sport; it's a way to break free, challenge limits, and create unforgettable memories. Our mission is to connect you with the best, most reliable operators, ensuring that every leap, dive, and climb is executed with the highest standards of safety and professionalism.
+                    </p>
+                </section>
+
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins']">Our Mission</h2>
+                    <ul className="list-disc list-inside text-lg text-steel-grey-700 leading-relaxed space-y-3">
+                        <li>To be the most trusted and comprehensive platform for adventure sports in India.</li>
+                        <li>To ensure the highest safety standards by partnering only with rigorously vetted operators.</li>
+                        <li>To empower individuals to discover their inner adventurer and create exhilarating, lifelong memories.</li>
+                        <li>To promote responsible tourism and sustainable adventure practices.</li>
+                    </ul>
+                </section>
+
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins']">Meet Our Founder</h2>
+                    <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="w-full md:w-1/3 flex flex-col items-center">
+                                <img src={member.image} alt={member.alt} className="w-40 h-40 rounded-full object-cover shadow-lg mb-4 border-4 border-terracotta-500" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/160x160/D3D3D3/000000?text=${member.name.split(' ').map(n => n[0]).join('')}`; }} />
+                                <h3 className="text-2xl font-semibold text-terracotta-600 font-['Poppins']">{member.name}</h3>
+                                <p className="text-md text-forest-green-500 mb-2">{member.title}</p>
+                                <p className="text-steel-grey-700 text-center text-sm leading-relaxed">{member.bio}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="bg-white rounded-lg shadow-xl p-8 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins']">Our Values</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="text-center p-4">
+                            <i className="fas fa-heartbeat fa-3x text-terracotta-500 mb-3"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Safety First</h3>
+                            <p className="text-steel-grey-700 text-sm">Prioritizing the well-being of our adventurers above all else.</p>
+                        </div>
+                        <div className="text-center p-4">
+                            <i className="fas fa-handshake fa-3x text-terracotta-500 mb-3"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Trust & Transparency</h3>
+                            <p className="text-steel-grey-700 text-sm">Clear communication and reliable partnerships build confidence.</p>
+                        </div>
+                        <div className="text-center p-4">
+                            <i className="fas fa-mountain fa-3x text-terracotta-500 mb-3"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Exhilarating Experiences</h3>
+                            <p className="text-steel-grey-700 text-sm">Crafting moments that are truly unforgettable and empowering.</p>
+                        </div>
+                        <div className="text-center p-4">
+                            <i className="fas fa-users-gear fa-3x text-terracotta-500 mb-3"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Community & Inclusivity</h3>
+                            <p className="text-steel-grey-700 text-sm">Fostering a welcoming environment for all adventurers.</p>
+                        </div>
+                        <div className="text-center p-4">
+                            <i className="fas fa-leaf fa-3x text-terracotta-500 mb-3"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Sustainability</h3>
+                            <p className="text-steel-grey-700 text-sm">Promoting eco-friendly practices in adventure tourism.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <div className="text-center mt-12 animate-fade-in-up delay-400">
+                    <button
+                        className="bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50"
+                        onClick={() => { setCurrentPage('contact'); setSelectedBlogPost(null); }}
+                    >
+                        Get in Touch <i className="fas fa-envelope ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        );
+
+        const AdventuresPage = ({ activities }) => {
             const [filterType, setFilterType] = useState('All');
             const [filterLocation, setFilterLocation] = useState('All');
             const [filterFirstTime, setFilterFirstTime] = useState(false);
             const [filterFemaleStaff, setFilterFemaleStaff] = useState(false);
+            const [searchTerm, setSearchTerm] = useState('');
 
-            const uniqueTypes = ['All', ...new Set(activities.map(a => a.type))];
-            const uniqueLocations = ['All', ...new Set(activities.map(a => a.location))];
+            const activityTypes = ['All', ...new Set(activities.map(a => a.type))];
+            const activityLocations = ['All', ...new Set(activities.map(a => a.location))];
 
             const filteredActivities = activities.filter(activity => {
                 const matchesType = filterType === 'All' || activity.type === filterType;
                 const matchesLocation = filterLocation === 'All' || activity.location === filterLocation;
                 const matchesFirstTime = !filterFirstTime || activity.firstTime;
                 const matchesFemaleStaff = !filterFemaleStaff || activity.femaleStaff;
-                return matchesType && matchesLocation && matchesFirstTime && matchesFemaleStaff;
+                const matchesSearch = activity.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                      activity.description.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesType && matchesLocation && matchesFirstTime && matchesFemaleStaff && matchesSearch;
             });
 
             return (
-                <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                    <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Discover Your Next Adventure</h1>
+                <div className="container mx-auto py-16 px-6">
+                    <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                        Our Exhilarating Adventures
+                    </h1>
 
-                    {/* Filters */}
-                    <div className="bg-white p-6 rounded-xl shadow-lg mb-12 border border-steel-grey-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div className="flex-1">
-                            <label htmlFor="type-filter" className="block text-steel-grey-700 font-semibold mb-2">Activity Type:</label>
-                            <select
-                                id="type-filter"
-                                value={filterType}
-                                onChange={(e) => setFilterType(e.target.value)}
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg bg-white text-steel-grey-600 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                            >
-                                {uniqueTypes.map(type => (
-                                    <option key={type} value={type}>{type}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="flex-1">
-                            <label htmlFor="location-filter" className="block text-steel-grey-700 font-semibold mb-2">Location:</label>
-                            <select
-                                id="location-filter"
-                                value={filterLocation}
-                                onChange={(e) => setFilterLocation(e.target.value)}
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg bg-white text-steel-grey-600 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                            >
-                                {uniqueLocations.map(location => (
-                                    <option key={location} value={location}>{location}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="flex flex-col gap-2 md:gap-4 md:flex-row md:items-center">
-                            <label className="flex items-center text-steel-grey-700 font-semibold cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={filterFirstTime}
-                                    onChange={(e) => setFilterFirstTime(e.target.checked)}
-                                    className="mr-2 h-5 w-5 text-deep-sky-blue-500 rounded border-steel-grey-100 focus:ring-deep-sky-blue-500"
-                                />
-                                First-Timer Friendly
-                            </label>
-                            <label className="flex items-center text-steel-grey-700 font-semibold cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={filterFemaleStaff}
-                                    onChange={(e) => setFilterFemaleStaff(e.target.checked)}
-                                    className="mr-2 h-5 w-5 text-deep-sky-blue-500 rounded border-steel-grey-100 focus:ring-deep-sky-blue-500"
-                                />
-                                Female Staff
-                            </label>
+                    {/* Filter and Search Section */}
+                    <div className="bg-white rounded-lg shadow-xl p-6 mb-12 animate-fade-in-up delay-200">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
+                            {/* Search Input */}
+                            <div className="col-span-full lg:col-span-1">
+                                <label htmlFor="search" className="block text-steel-grey-700 text-sm font-semibold mb-2">Search Activities</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        id="search"
+                                        placeholder="e.g., Skydiving, Rishikesh..."
+                                        className="w-full p-3 pl-10 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                    <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-steel-grey-600"></i>
+                                </div>
+                            </div>
+
+                            {/* Type Filter */}
+                            <div>
+                                <label htmlFor="type-filter" className="block text-steel-grey-700 text-sm font-semibold mb-2">Activity Type</label>
+                                <select
+                                    id="type-filter"
+                                    className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700"
+                                    value={filterType}
+                                    onChange={(e) => setFilterType(e.target.value)}
+                                >
+                                    {activityTypes.map(type => (
+                                        <option key={type} value={type}>{type}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Location Filter */}
+                            <div>
+                                <label htmlFor="location-filter" className="block text-steel-grey-700 text-sm font-semibold mb-2">Location</label>
+                                <select
+                                    id="location-filter"
+                                    className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700"
+                                    value={filterLocation}
+                                    onChange={(e) => setFilterLocation(e.target.value)}
+                                >
+                                    {activityLocations.map(location => (
+                                        <option key={location} value={location}>{location}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Checkboxes */}
+                            <div className="flex flex-col space-y-3">
+                                <label className="inline-flex items-center text-steel-grey-700 text-base font-medium cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500"
+                                        checked={filterFirstTime}
+                                        onChange={(e) => setFilterFirstTime(e.target.checked)}
+                                    />
+                                    <span className="ml-2">First-Timer Friendly</span>
+                                </label>
+                                <label className="inline-flex items-center text-steel-grey-700 text-base font-medium cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500"
+                                        checked={filterFemaleStaff}
+                                        onChange={(e) => setFilterFemaleStaff(e.target.checked)}
+                                    />
+                                    <span className="ml-2">Female Instructor Available</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Activity Cards */}
+                    {/* Activity Listings */}
                     {filteredActivities.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filteredActivities.map(activity => (
-                                <div key={activity.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100 hover:shadow-xl transition-shadow duration-300 group">
-                                    <img src={activity.image} alt={activity.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
+                                <div key={activity.id} className="bg-white rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer border border-steel-grey-100">
+                                    <div className="relative h-60 overflow-hidden">
+                                        <img src={activity.image} alt={activity.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x300/CCCCCC/000000?text=${activity.name.replace(/\s/g, '+')}`; }} />
+                                        {activity.featured && (
+                                            <div className="absolute top-4 left-4 bg-terracotta-500 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
+                                                Featured
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="p-6">
-                                        <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">{activity.name}</h3>
-                                        <p className="text-steel-grey-600 text-sm mb-3"><i className="fas fa-map-marker-alt mr-1"></i> {activity.location}</p>
-                                        <p className="text-steel-grey-600 text-sm line-clamp-3 mb-4">{activity.description}</p>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-terracotta-600 font-bold text-lg">{activity.price}</span>
-                                            <button
-                                                onClick={() => alert(`Booking for ${activity.name} in ${activity.location}. (This would navigate to a detailed booking page.)`)}
-                                                className="bg-forest-green-600 hover:bg-forest-green-700 text-white px-5 py-2 rounded-full text-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500"
-                                                aria-label={`Book ${activity.name}`}
-                                            >
-                                                Book Now
-                                            </button>
+                                        <h3 className="text-2xl font-bold text-forest-green-600 mb-2 font-['Poppins']">
+                                            {activity.name}
+                                        </h3>
+                                        <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed">{activity.description}</p>
+                                        <div className="flex justify-between items-center text-lg font-semibold text-terracotta-700">
+                                            <span><i className="fas fa-map-marker-alt mr-2 text-deep-sky-blue-600"></i>{activity.location}</span>
+                                            <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.price}</span>
                                         </div>
+                                        <div className="flex flex-wrap mt-4 text-sm">
+                                            {activity.type && (
+                                                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full mr-2 mb-2">
+                                                    <i className="fas fa-tag mr-1"></i> {activity.type}
+                                                </span>
+                                            )}
+                                            {activity.firstTime && (
+                                                <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full mr-2 mb-2">
+                                                    <i className="fas fa-star mr-1"></i> First-Timer
+                                                </span>
+                                            )}
+                                            {activity.femaleStaff && (
+                                                <span className="bg-pink-100 text-pink-800 px-3 py-1 rounded-full mb-2">
+                                                    <i className="fas fa-female mr-1"></i> Female Staff
+                                                </span>
+                                            )}
+                                        </div>
+                                        <button
+                                            className="mt-6 w-full bg-forest-green-500 hover:bg-forest-green-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 ease-in-out transform hover:-translate-y-1 shadow-lg focus:outline-none focus:ring-4 focus:ring-forest-green-500 focus:ring-opacity-50"
+                                            onClick={() => alert(`Booking for ${activity.name}`)} // Placeholder for actual booking logic
+                                        >
+                                            Book Now
+                                        </button>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-center text-steel-grey-600 text-lg py-10">No adventures found matching your criteria. Try adjusting your filters!</p>
+                        <div className="bg-white rounded-lg shadow-xl p-8 text-center text-terracotta-600 text-2xl font-semibold">
+                            No adventures found matching your criteria. Try adjusting your filters!
+                        </div>
                     )}
-                </section>
+                </div>
             );
         };
 
-        const Pricing = () => (
-            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Our Flexible Pricing</h1>
-                <p className="text-center text-lg text-steel-grey-600 mb-8 max-w-2xl mx-auto">
-                    At Adrenaline Rizz, we believe in transparent pricing that offers great value for thrilling experiences. Prices vary based on activity, location, and season, but we always ensure competitive rates with safety and insurance included.
-                </p>
+        const PricingPage = () => (
+            <div className="container mx-auto py-16 px-6">
+                <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                    Simple & Transparent Pricing
+                </h1>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {/* Basic Package Example */}
-                    <div className="bg-white rounded-xl shadow-lg border-2 border-forest-green-500 p-8 text-center flex flex-col justify-between">
-                        <div>
-                            <h2 className="text-3xl font-bold text-forest-green-700 mb-4">Solo Explorer</h2>
-                            <p className="text-steel-grey-600 mb-6">Perfect for individual thrill-seekers.</p>
-                            <div className="text-5xl font-extrabold text-steel-grey-700 mb-6">
-                                Activity Dependent
-                            </div>
-                            <ul className="text-left text-steel-grey-600 mb-8 space-y-2">
-                                <li className="flex items-center"><i className="fas fa-check-circle text-forest-green-500 mr-2"></i>Basic Activity Slot</li>
-                                <li className="flex items-center"><i className="fas fa-check-circle text-forest-green-500 mr-2"></i>Injury Insurance</li>
-                                <li className="flex items-center"><i className="fas fa-check-circle text-forest-green-500 mr-2"></i>Verified Operator</li>
-                                <li className="flex items-center text-gray-400"><i className="fas fa-times-circle mr-2"></i>Premium Photos/Video</li>
-                                <li className="flex items-center text-gray-400"><i className="fas fa-times-circle mr-2"></i>Exclusive Group Discounts</li>
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-200">
+                    <p className="text-lg text-steel-grey-700 leading-relaxed text-center max-w-3xl mx-auto mb-8">
+                        At Adrenaline Rizz, we believe in clear and upfront pricing. The price you see on each activity listing is the total price you pay, with no hidden fees. All bookings include basic injury insurance for your peace of mind.
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {/* Pricing Tier 1 */}
+                        <div className="border border-forest-green-500 rounded-lg p-6 text-center shadow-lg transform hover:scale-105 transition-transform duration-300">
+                            <h3 className="text-3xl font-bold text-forest-green-600 mb-4">Basic Thrill</h3>
+                            <p className="text-steel-grey-700 mb-4">Perfect for short, exhilarating experiences.</p>
+                            <p className="text-5xl font-extrabold text-terracotta-700 mb-6">Activity Price</p>
+                            <ul className="text-steel-grey-700 text-left mx-auto max-w-[200px] space-y-2 mb-8">
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Verified Operator</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Basic Injury Insurance</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>24/7 Customer Support</li>
+                                <li className="flex items-center opacity-60"><i className="fas fa-times-circle text-steel-grey-400 mr-2"></i>Premium Photo/Video Pack</li>
                             </ul>
+                            <button className="w-full bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50">
+                                View Adventures
+                            </button>
                         </div>
-                        <button className="bg-forest-green-600 hover:bg-forest-green-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-forest-green-500" onClick={() => alert('Pricing varies per activity. Please check individual adventure pages for precise costs.')}>
-                            Learn More
-                        </button>
-                    </div>
 
-                    {/* Most Popular Package Example */}
-                    <div className="bg-terracotta-600 text-white rounded-xl shadow-xl border-2 border-terracotta-700 p-8 text-center flex flex-col justify-between transform scale-105 z-10">
-                        <div>
-                            <h2 className="text-3xl font-bold mb-4">Adventure Duo</h2>
-                            <p className="opacity-90 mb-6">Ideal for couples or friends seeking shared thrills.</p>
-                            <div className="text-5xl font-extrabold mb-6 text-light-brown-50">
-                                Activity Dependent
+                        {/* Pricing Tier 2 (Recommended) */}
+                        <div className="border-4 border-terracotta-500 rounded-lg p-8 text-center shadow-2xl transform scale-105 transition-transform duration-300 relative">
+                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-terracotta-500 text-white text-sm font-bold px-4 py-1 rounded-full shadow-lg">
+                                RECOMMENDED
                             </div>
-                            <ul className="text-left opacity-90 mb-8 space-y-2">
-                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>All Solo Explorer Benefits</li>
-                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>Discount for Second Person</li>
-                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>Premium Photo/Video Add-on Option</li>
-                                <li className="flex items-center"><i className="fas fa-check-circle text-light-brown-50 mr-2"></i>Priority Booking Access</li>
+                            <h3 className="text-3xl font-bold text-terracotta-700 mb-4">Pro Adventurer</h3>
+                            <p className="text-steel-grey-700 mb-4">For the true thrill-seeker looking for more.</p>
+                            <p className="text-5xl font-extrabold text-forest-green-700 mb-6">Activity Price + ₹499</p>
+                            <ul className="text-steel-grey-700 text-left mx-auto max-w-[200px] space-y-2 mb-8">
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Verified Operator</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Enhanced Injury Insurance</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Priority Customer Support</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i><strong>Free Basic Photo Pack</strong></li>
                             </ul>
+                            <button className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50">
+                                Choose This Plan
+                            </button>
                         </div>
-                        <button className="bg-light-brown-50 text-terracotta-700 font-bold py-3 px-6 rounded-full hover:bg-light-brown-100 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-light-brown-500" onClick={() => alert('Pricing varies per activity. Please check individual adventure pages for precise costs.')}>
-                            Choose Plan
-                        </button>
-                    </div>
 
-                    {/* Group Package Example */}
-                    <div className="bg-white rounded-xl shadow-lg border-2 border-deep-sky-blue-500 p-8 text-center flex flex-col justify-between">
-                        <div>
-                            <h2 className="text-3xl font-bold text-deep-sky-blue-700 mb-4">Group Thrills</h2>
-                            <p className="text-steel-grey-600 mb-6">Tailored for groups of 4+ looking for an epic outing.</p>
-                            <div className="text-5xl font-extrabold text-steel-grey-700 mb-6">
-                                Custom Quote
-                            </div>
-                            <ul className="text-left text-steel-grey-600 mb-8 space-y-2">
-                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>All Duo Benefits</li>
-                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Significant Group Discounts</li>
+                        {/* Pricing Tier 3 */}
+                        <div className="border border-forest-green-500 rounded-lg p-6 text-center shadow-lg transform hover:scale-105 transition-transform duration-300">
+                            <h3 className="text-3xl font-bold text-forest-green-600 mb-4">Group Package</h3>
+                            <p className="text-steel-grey-700 mb-4">Best value for families and groups.</p>
+                            <p className="text-5xl font-extrabold text-terracotta-700 mb-6">Custom Quote</p>
+                            <ul className="text-steel-grey-700 text-left mx-auto max-w-[200px] space-y-2 mb-8">
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Verified Operator</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Basic Injury Insurance</li>
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Dedicated Group Coordinator</li>
-                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Customizable Packages</li>
+                                <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Discounted Rates (5+ people)</li>
                             </ul>
+                            <button className="w-full bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50">
+                                Get a Custom Quote
+                            </button>
                         </div>
-                        <button className="bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500" onClick={() => alert('Please contact us for a custom group quote!')}>
-                            Get a Quote
-                        </button>
                     </div>
-                </div>
+                </section>
 
-                <p className="text-center text-steel-grey-600 text-sm mt-12">
-                    *All prices are subject to change and specific activity details. Please refer to the individual adventure pages for the most accurate pricing information.
-                </p>
-            </section>
+                <section className="bg-white rounded-lg shadow-xl p-8 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Important Notes</h2>
+                    <ul className="list-disc list-inside text-lg text-steel-grey-700 leading-relaxed space-y-3 mx-auto max-w-4xl">
+                        <li>Prices listed on individual adventure pages are for the "Basic Thrill" package unless otherwise specified.</li>
+                        <li>The "Pro Adventurer" upgrade includes additional benefits as listed, and is an optional add-on.</li>
+                        <li>Group packages require a minimum of 5 participants for discounted rates. Contact us for a personalized quote.</li>
+                        <li>All prices are inclusive of applicable taxes unless stated otherwise.</li>
+                        <li>Payment methods include major credit/debit cards, net banking, and select digital wallets.</li>
+                        <li>For details on our Refund & Cancellation Policy, please refer to the <a href="#" onClick={() => { setCurrentPage('legal'); }} className="text-deep-sky-blue-600 hover:underline font-semibold">Legal section</a>.</li>
+                    </ul>
+                </section>
+            </div>
         );
 
-        const Blog = ({ blogPosts, setCurrentPage, setSelectedBlogPost }) => (
-            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Adrenaline Rizz Blog</h1>
+        const BlogPage = ({ blogPosts, setCurrentPage, setSelectedBlogPost }) => {
+            const [filterTag, setFilterTag] = useState('All');
+            const tags = ['All', ...new Set(blogPosts.flatMap(post => post.tags))];
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {blogPosts.map(post => (
-                        <div key={post.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100 hover:shadow-xl transition-shadow duration-300 group">
-                            <img src={post.image} alt={post.title} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/400x250/ccc/000?text=Image+Error"; }} />
-                            <div className="p-6">
-                                <h2 className="text-xl font-semibold text-steel-grey-700 mb-2">{post.title}</h2>
-                                <div className="flex flex-wrap gap-2 mb-3">
-                                    {post.tags.map((tag, index) => (
-                                        <span key={index} className="bg-steel-grey-100 text-steel-grey-600 text-xs px-3 py-1 rounded-full">{tag}</span>
-                                    ))}
-                                </div>
-                                <p className="text-steel-grey-600 text-sm line-clamp-3 mb-4">{post.content.replace(/<[^>]+>/g, '')}</p>
-                                <button
-                                    onClick={() => { setSelectedBlogPost(post); setCurrentPage('blogPost'); }}
-                                    className="text-terracotta-600 hover:text-terracotta-700 font-semibold transition-colors duration-300 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-500 rounded-md"
-                                    aria-label={`Read more about ${post.title}`}
-                                >
-                                    Read More <i className="fas fa-arrow-right ml-1"></i>
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-        );
-
-        const BlogPostDetail = ({ post, setCurrentPage }) => {
-            if (!post) {
-                return (
-                    <section className="container mx-auto py-16 px-6 text-center">
-                        <p className="text-xl text-steel-grey-600">Blog post not found.</p>
-                        <button
-                            onClick={() => setCurrentPage('blog')}
-                            className="mt-8 bg-deep-sky-blue-600 hover:bg-deep-sky-blue-700 text-white font-bold py-2 px-6 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                            aria-label="Back to Blog"
-                        >
-                            Back to Blog
-                        </button>
-                    </section>
-                );
-            }
+            const filteredPosts = blogPosts.filter(post =>
+                filterTag === 'All' || post.tags.includes(filterTag)
+            );
 
             return (
-                <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                    <button
-                        onClick={() => setCurrentPage('blog')}
-                        className="text-deep-sky-blue-600 hover:text-deep-sky-blue-700 font-semibold mb-8 inline-flex items-center transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 rounded-md p-2 -ml-2"
-                        aria-label="Back to Blog"
-                    >
-                        <i className="fas fa-arrow-left mr-2"></i> Back to Blog
-                    </button>
-                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-steel-grey-100">
-                        <img src={post.image} alt={post.title} className="w-full h-64 object-cover object-center" onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/800x450/ccc/000?text=Image+Error"; }} />
-                        <div className="p-6 md:p-8 lg:p-10">
-                            <h1 className="text-3xl md:text-4xl font-bold text-steel-grey-700 mb-4">{post.title}</h1>
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {post.tags.map((tag, index) => (
-                                    <span key={index} className="bg-steel-grey-100 text-steel-grey-600 text-sm px-4 py-1 rounded-full">{tag}</span>
-                                ))}
-                            </div>
-                            {/* dangerouslySetInnerHTML is used here to render HTML content from the blog post data.
-                                Be cautious when using this as it can expose you to XSS attacks if content is not trusted.
-                                In this context, the content is static and controlled by us. */}
-                            <div className="prose max-w-none text-steel-grey-600 text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: post.content }}></div>
+                <div className="container mx-auto py-16 px-6">
+                    <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                        Adrenaline Rizz Blog
+                    </h1>
+
+                    {/* Tag Filter */}
+                    <div className="bg-white rounded-lg shadow-xl p-6 mb-12 text-center animate-fade-in-up delay-200">
+                        <label htmlFor="tag-filter" className="block text-steel-grey-700 text-lg font-semibold mb-4">Filter by Topic:</label>
+                        <div className="flex flex-wrap justify-center gap-3">
+                            {tags.map(tag => (
+                                <button
+                                    key={tag}
+                                    className={`py-2 px-5 rounded-full text-lg font-semibold transition-colors duration-300 ${
+                                        filterTag === tag
+                                            ? 'bg-deep-sky-blue-500 text-white shadow-md'
+                                            : 'bg-steel-grey-100 text-steel-grey-700 hover:bg-steel-grey-200'
+                                    } focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 focus:ring-opacity-50`}
+                                    onClick={() => setFilterTag(tag)}
+                                >
+                                    {tag}
+                                </button>
+                            ))}
                         </div>
                     </div>
-                </section>
+
+                    {filteredPosts.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {filteredPosts.map(post => (
+                                <div key={post.id} className="bg-white rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer border border-steel-grey-100"
+                                    onClick={() => setSelectedBlogPost(post)}>
+                                    <img src={post.image} alt={post.title} className="w-full h-48 object-cover" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x200/B0E0E6/000000?text=${post.title.replace(/\s/g, '+')}`; }} />
+                                    <div className="p-6">
+                                        <div className="flex flex-wrap gap-2 mb-3">
+                                            {post.tags.map(tag => (
+                                                <span key={tag} className="bg-terracotta-100 text-terracotta-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <h3 className="text-xl font-bold text-forest-green-600 mb-3 font-['Poppins']">
+                                            {post.title}
+                                        </h3>
+                                        <p className="text-steel-grey-700 text-sm leading-relaxed mb-4">
+                                            {post.content.slice(0, 150)}...
+                                        </p>
+                                        <button
+                                            className="text-deep-sky-blue-600 hover:text-deep-sky-blue-700 font-semibold flex items-center transition-colors duration-300"
+                                            onClick={(e) => { e.stopPropagation(); setSelectedBlogPost(post); }}
+                                        >
+                                            Read More <i className="fas fa-chevron-right ml-1 text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-lg shadow-xl p-8 text-center text-terracotta-600 text-2xl font-semibold">
+                            No blog posts found matching your criteria.
+                        </div>
+                    )}
+                </div>
             );
         };
 
-        const JoinUsForOperators = () => (
-            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Partner with Adrenaline Rizz: Grow Your Adventure Business!</h1>
+        const BlogPostPage = ({ post, setSelectedBlogPost }) => (
+            <div className="container mx-auto py-16 px-6">
+                <button
+                    className="mb-8 flex items-center text-deep-sky-blue-600 hover:text-deep-sky-blue-700 font-semibold text-lg transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
+                    onClick={() => setSelectedBlogPost(null)}
+                >
+                    <i className="fas fa-arrow-left mr-2"></i> Back to Blog
+                </button>
 
-                {/* Impact Numbers */}
-                <div className="bg-terracotta-500 text-white py-12 px-6 rounded-xl shadow-lg mb-16 text-center">
-                    <p className="text-5xl md:text-6xl font-extrabold mb-4">120<span className="text-light-brown-50">+</span></p>
-                    <p className="text-xl md:text-2xl font-semibold">Operators Partnered in just 6 months!</p>
+                <div className="bg-white rounded-lg shadow-xl p-8">
+                    <img src={post.image} alt={post.title} className="w-full h-auto max-h-96 object-cover rounded-lg mb-8 shadow-md" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/800x450/B0E0E6/000000?text=${post.title.replace(/\s/g, '+')}`; }} />
+                    <h1 className="text-4xl font-extrabold text-terracotta-700 mb-4 font-['Montserrat']">
+                        {post.title}
+                    </h1>
+                    <div className="flex flex-wrap gap-2 mb-6">
+                        {post.tags.map(tag => (
+                            <span key={tag} className="bg-terracotta-100 text-terracotta-700 text-sm font-semibold px-3 py-1 rounded-full">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                    <div className="prose max-w-none text-steel-grey-700 text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: post.content }}>
+                    </div>
                 </div>
+            </div>
+        );
 
-                {/* Success Stories */}
-                <div className="mb-16">
-                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-8 text-center">Our Partners' Success Stories</h2>
+        const JoinUsPage = () => (
+            <div className="container mx-auto py-16 px-6">
+                <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                    Join Our Adventure Network!
+                </h1>
+
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-200">
+                    <p className="text-lg text-steel-grey-700 leading-relaxed text-center max-w-3xl mx-auto mb-8">
+                        Are you an adventure operator in India with a passion for safety and unforgettable experiences? Partner with Adrenaline Rizz and reach a wider audience of thrill-seekers across the nation!
+                    </p>
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Why Partner With Us?</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Story 1 */}
-                        <div className="bg-white p-8 rounded-xl shadow-md border border-steel-grey-100">
-                            <h3 className="text-xl font-bold text-terracotta-600 mb-3">How Raju Adventure Doubled Bookings with Adrenaline Rizz</h3>
-                            <p className="text-steel-grey-600 text-sm italic mb-4">"Before Adrenaline Rizz, managing bookings was a manual nightmare. Now, with their digital platform and marketing support, our scuba diving trips are fully booked weeks in advance! It's transformed our business."</p>
-                            <p className="text-right font-semibold text-steel-grey-700">- Raju, Owner of Raju Adventure, Goa</p>
-                        </div>
-                        {/* Story 2 */}
-                        <div className="bg-white p-8 rounded-xl shadow-md border border-steel-grey-100">
-                            <h3 className="text-xl font-bold text-terracotta-600 mb-3">Scaling New Heights: Sky High Adventures' Growth Story</h3>
-                            <p className="text-steel-grey-600 text-sm italic mb-4">"The training and standardization guidance from Adrenaline Rizz truly elevated our bungee jumping operations. Their brand leverage brought us a wider audience, leading to a 75% increase in annual revenue."</p>
-                            <p className="text-right font-semibold text-steel-grey-700">- Neha Singh, Operations Head, Sky High Adventures, Rishikesh</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Benefits Section */}
-                <div className="mb-16">
-                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-8 text-center">Benefits of Partnering with Us</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-laptop-code text-4xl text-deep-sky-blue-600 mt-1"></i>
+                        <div className="flex items-start p-4 bg-light-brown-50 rounded-lg shadow-md">
+                            <i className="fas fa-users fa-2x text-terracotta-500 mr-4 mt-1"></i>
                             <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Cutting-Edge Tech Support</h3>
-                                <p className="text-steel-grey-600 text-sm">Gain access to our intuitive platform for seamless booking management, real-time slot updates, and customer communication.</p>
+                                <h3 className="text-xl font-semibold text-forest-green-600 mb-1">Wider Reach</h3>
+                                <p className="text-steel-grey-700 text-sm">Access to a vast network of adventurers actively seeking thrilling experiences.</p>
                             </div>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-calendar-check text-4xl text-forest-green-600 mt-1"></i>
+                        <div className="flex items-start p-4 bg-light-brown-50 rounded-lg shadow-md">
+                            <i className="fas fa-handshake fa-2x text-terracotta-500 mr-4 mt-1"></i>
                             <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Streamlined Digital Bookings</h3>
-                                <p className="text-steel-grey-600 text-sm">Effortlessly handle online reservations, reduce paperwork, and expand your reach to a nationwide audience.</p>
+                                <h3 className="text-xl font-semibold text-forest-green-600 mb-1">Trusted Brand</h3>
+                                <p className="text-steel-grey-700 text-sm">Associate with a brand known for safety, quality, and reliability.</p>
                             </div>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-graduation-cap text-4xl text-terracotta-600 mt-1"></i>
+                        <div className="flex items-start p-4 bg-light-brown-50 rounded-lg shadow-md">
+                            <i className="fas fa-calendar-check fa-2x text-terracotta-500 mr-4 mt-1"></i>
                             <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Professional Training & Development</h3>
-                                <p className="text-steel-grey-600 text-sm">Opportunities for your staff to receive specialized training, ensuring adherence to the highest safety and service standards.</p>
+                                <h3 className="text-xl font-semibold text-forest-green-600 mb-1">Easy Booking System</h3>
+                                <p className="text-steel-grey-700 text-sm">Seamless integration with our user-friendly booking and slot management system.</p>
                             </div>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-clipboard-check text-4xl text-amber-500 mt-1"></i>
+                        <div className="flex items-start p-4 bg-light-brown-50 rounded-lg shadow-md">
+                            <i className="fas fa-chart-line fa-2x text-terracotta-500 mr-4 mt-1"></i>
                             <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Operational Standardization</h3>
-                                <p className="text-steel-grey-600 text-sm">Adopt best practices and standardized procedures that enhance safety, efficiency, and customer satisfaction.</p>
-                            </div>
-                        </div>
-                        <div className="bg-white p-6 rounded-xl shadow-md border border-steel-grey-100 flex items-start space-x-4">
-                            <i className="fas fa-hand-holding-heart text-4xl text-red-500 mt-1"></i>
-                            <div>
-                                <h3 className="text-xl font-semibold text-steel-grey-700 mb-2">Leverage Our Brand & Marketing</h3>
-                                <p className="text-steel-grey-600 text-sm">Benefit from Adrenaline Rizz's extensive marketing reach and trusted brand reputation to attract more adventurers.</p>
+                                <h3 className="text-xl font-semibold text-forest-green-600 mb-1">Business Growth</h3>
+                                <p className="text-steel-grey-700 text-sm">Expand your customer base and grow your adventure business.</p>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
-                {/* Application Form */}
-                <div className="bg-white rounded-xl shadow-lg p-8 border border-steel-grey-100 max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-semibold text-steel-grey-700 mb-8 text-center">Apply to Become a Partner</h2>
-                    <p className="text-lg text-steel-grey-600 mb-8 text-center">
-                        Ready to take your adventure business to the next level? Fill out the form below and our partnerships team will get in touch!
-                    </p>
-
-                    <form className="space-y-6">
-                        <div>
-                            <label htmlFor="operator-name" className="block text-steel-grey-700 font-semibold mb-2">Your Name</label>
-                            <input
-                                type="text"
-                                id="operator-name"
-                                name="operator-name"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                                placeholder="Your Full Name"
-                                aria-label="Your Full Name"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="company-name" className="block text-steel-grey-700 font-semibold mb-2">Company Name</label>
-                            <input
-                                type="text"
-                                id="company-name"
-                                name="company-name"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                                placeholder="Adventure Co. Pvt. Ltd."
-                                aria-label="Company Name"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="operator-email" className="block text-steel-grey-700 font-semibold mb-2">Company Email</label>
-                            <input
-                                type="email"
-                                id="operator-email"
-                                name="operator-email"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                                placeholder="partnerships@yourcompany.com"
-                                aria-label="Company Email"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="operator-phone" className="block text-steel-grey-700 font-semibold mb-2">Phone Number</label>
-                            <input
-                                type="tel"
-                                id="operator-phone"
-                                name="operator-phone"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                                placeholder="+91 XXXXXXXXXX"
-                                aria-label="Phone Number"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="activities-offered" className="block text-steel-grey-700 font-semibold mb-2">Types of Activities Offered</label>
-                            <textarea
-                                id="activities-offered"
-                                name="activities-offered"
-                                rows="4"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 resize-y"
-                                placeholder="e.g., Scuba Diving, Paragliding, Trekking, Rafting"
-                                aria-label="Types of Activities Offered"
-                            ></textarea>
-                        </div>
-                        <div>
-                            <label htmlFor="message-to-us" className="block text-steel-grey-700 font-semibold mb-2">Message (Optional)</label>
-                            <textarea
-                                id="message-to-us"
-                                name="message-to-us"
-                                rows="3"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 resize-y"
-                                placeholder="Any additional information you'd like to share..."
-                                aria-label="Additional Message"
-                            ></textarea>
-                        </div>
+                <section className="bg-white rounded-lg shadow-xl p-8 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">How to Partner</h2>
+                    <ol className="list-decimal list-inside text-lg text-steel-grey-700 leading-relaxed space-y-4 mx-auto max-w-3xl">
+                        <li><strong>Submit Your Application:</strong> Fill out our online partnership inquiry form with details about your operations and activities.</li>
+                        <li><strong>Verification Process:</strong> Our team will conduct a thorough review of your safety standards, certifications, equipment, and track record.</li>
+                        <li><strong>Agreement & Onboarding:</strong> Once verified, we'll finalize our partnership agreement and help you integrate your activities onto our platform.</li>
+                        <li><strong>Start Receiving Bookings:</strong> Your adventures go live, and you start connecting with thrill-seekers!</li>
+                    </ol>
+                    <div className="text-center mt-12">
                         <button
-                            type="submit"
-                            className="w-full bg-forest-green-600 hover:bg-forest-green-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-forest-green-500"
-                            aria-label="Submit Application"
-                            onClick={(e) => { e.preventDefault(); alert('Thank you for your application! Our partnerships team will review it and get in touch soon.'); }}
+                            className="bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50"
+                            onClick={() => alert('Opening Partner Application Form')} // Placeholder for actual form link/modal
                         >
-                            Submit Application
+                            Apply Now! <i className="fas fa-paper-plane ml-2"></i>
                         </button>
-                    </form>
-
-                    <div className="mt-12 text-center text-steel-grey-600">
-                        <h3 className="text-xl font-semibold mb-4 text-steel-grey-700">Prefer Direct Contact?</h3>
-                        <p className="mb-2"><i className="fas fa-envelope mr-2 text-deep-sky-blue-600"></i> Email: partnerships@adrenalinerizz.com</p>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
         );
 
+        const ContactPage = () => (
+            <div className="container mx-auto py-16 px-6">
+                <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                    Get in Touch With Us
+                </h1>
 
-        const Contact = () => (
-            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Get in Touch</h1>
-
-                <div className="bg-white rounded-xl shadow-lg p-8 border border-steel-grey-100 max-w-3xl mx-auto">
-                    <p className="text-lg text-steel-grey-600 mb-8 text-center">
-                        Have a question, feedback, or a partnership inquiry? We'd love to hear from you!
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-200">
+                    <p className="text-lg text-steel-grey-700 leading-relaxed text-center max-w-3xl mx-auto mb-8">
+                        Have questions, feedback, or need assistance with a booking? Our dedicated team is here to help! Reach out to us through any of the methods below.
                     </p>
 
-                    <form className="space-y-6">
-                        <div>
-                            <label htmlFor="name" className="block text-steel-grey-700 font-semibold mb-2">Your Name</label>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                                placeholder="John Doe"
-                                aria-label="Your Name"
-                            />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div className="p-6 border border-steel-grey-100 rounded-lg shadow-md">
+                            <i className="fas fa-phone-alt fa-3x text-terracotta-500 mb-4"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Phone Support</h3>
+                            <p className="text-steel-grey-700 mb-2">+91 98765 43210</p>
+                            <p className="text-sm text-steel-grey-600">(Monday - Friday, 9 AM - 6 PM IST)</p>
                         </div>
-                        <div>
-                            <label htmlFor="email" className="block text-steel-grey-700 font-semibold mb-2">Your Email</label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                                placeholder="john.doe@example.com"
-                                aria-label="Your Email"
-                            />
+                        <div className="p-6 border border-steel-grey-100 rounded-lg shadow-md">
+                            <i className="fas fa-envelope fa-3x text-terracotta-500 mb-4"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Email Us</h3>
+                            <p className="text-steel-grey-700 mb-2">support@adrenalinerizz.com</p>
+                            <p className="text-sm text-steel-grey-600">(We aim to respond within 24 hours)</p>
                         </div>
-                        <div>
-                            <label htmlFor="subject" className="block text-steel-grey-700 font-semibold mb-2">Subject</label>
-                            <input
-                                type="text"
-                                id="subject"
-                                name="subject"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500"
-                                placeholder="Inquiry about..."
-                                aria-label="Subject"
-                            />
+                        <div className="p-6 border border-steel-grey-100 rounded-lg shadow-md">
+                            <i className="fas fa-map-marker-alt fa-3x text-terracotta-500 mb-4"></i>
+                            <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Our Office</h3>
+                            <p className="text-steel-grey-700 mb-2">123 Adventure Lane, Thrill City, India</p>
+                            <p className="text-sm text-steel-grey-600">(Visits by appointment only)</p>
                         </div>
-                        <div>
-                            <label htmlFor="message" className="block text-steel-grey-700 font-semibold mb-2">Message</label>
-                            <textarea
-                                id="message"
-                                name="message"
-                                rows="6"
-                                className="w-full p-3 border border-steel-grey-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 resize-y"
-                                placeholder="Your message here..."
-                                aria-label="Your Message"
-                            ></textarea>
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-terracotta-500"
-                            aria-label="Send Message"
-                            onClick={(e) => { e.preventDefault(); alert('Thank you for your message! We will get back to you soon.'); }}
-                        >
-                            Send Message
-                        </button>
-                    </form>
-
-                    <div className="mt-12 text-center text-steel-grey-600">
-                        <h3 className="text-xl font-semibold mb-4 text-steel-grey-700">Other Ways to Connect</h3>
-                        <p className="mb-2"><i className="fas fa-phone mr-2 text-deep-sky-blue-600"></i> Call Us: +91 7417565933</p>
-                        <p className="mb-2"><i className="fas fa-envelope mr-2 text-deep-sky-blue-600"></i> Email: udhavbindal29@gmail.com</p>
-                        <p className="mb-2"><i className="fas fa-map-marker-alt mr-2 text-deep-sky-blue-600"></i> Address: 123 Adventure Lane, Thrill City, India</p>
                     </div>
-                </div>
-            </section>
+                </section>
+
+                <section className="bg-white rounded-lg shadow-xl p-8 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Send Us a Message</h2>
+                    <form className="max-w-xl mx-auto space-y-6">
+                        <div>
+                            <label htmlFor="name" className="block text-steel-grey-700 text-sm font-semibold mb-2">Your Name</label>
+                            <input type="text" id="name" name="name" className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="John Doe" />
+                        </div>
+                        <div>
+                            <label htmlFor="email" className="block text-steel-grey-700 text-sm font-semibold mb-2">Your Email</label>
+                            <input type="email" id="email" name="email" className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="john.doe@example.com" />
+                        </div>
+                        <div>
+                            <label htmlFor="subject" className="block text-steel-grey-700 text-sm font-semibold mb-2">Subject</label>
+                            <input type="text" id="subject" name="subject" className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="Inquiry about a booking" />
+                        </div>
+                        <div>
+                            <label htmlFor="message" className="block text-steel-grey-700 text-sm font-semibold mb-2">Your Message</label>
+                            <textarea id="message" name="message" rows="5" className="w-full p-3 border border-steel-grey-100 rounded-md focus:ring-2 focus:ring-deep-sky-blue-500 focus:border-transparent text-steel-grey-700" placeholder="Tell us how we can help..."></textarea>
+                        </div>
+                        <div className="text-center">
+                            <button type="submit" className="bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50">
+                                Send Message <i className="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
         );
 
-        const FAQs = ({ faqs }) => {
-            const [openIndex, setOpenIndex] = useState(null);
+        const FAQsPage = ({ faqs }) => {
+            const [openIndex, setOpenIndex] = useState(null); // State to manage which FAQ is open
 
             const toggleFAQ = (index) => {
                 setOpenIndex(openIndex === index ? null : index);
             };
 
-            const uniqueCategories = [...new Set(faqs.map(faq => faq.category))];
+            const categories = ['All', ...new Set(faqs.map(faq => faq.category))];
+            const [filterCategory, setFilterCategory] = useState('All');
+
+            const filteredFAQs = faqs.filter(faq =>
+                filterCategory === 'All' || faq.category === filterCategory
+            );
 
             return (
-                <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                    <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Frequently Asked Questions</h1>
+                <div className="container mx-auto py-16 px-6">
+                    <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                        Frequently Asked Questions
+                    </h1>
 
-                    {uniqueCategories.map(category => (
-                        <div key={category} className="mb-10">
-                            <h2 className="text-3xl font-semibold text-steel-grey-700 mb-6 border-b-2 border-terracotta-500 pb-2">{category}</h2>
-                            <div className="space-y-4">
-                                {faqs.filter(faq => faq.category === category).map((faq, index) => (
-                                    <div key={index} className="bg-white rounded-xl shadow-md border border-steel-grey-100 overflow-hidden">
-                                        <button
-                                            className="w-full text-left p-5 flex justify-between items-center text-steel-grey-700 font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 rounded-lg"
-                                            onClick={() => toggleFAQ(`${category}-${index}`)}
-                                            aria-expanded={openIndex === `${category}-${index}`}
-                                            aria-controls={`faq-answer-${category}-${index}`}
-                                        >
-                                            {faq.question}
-                                            <i className={`fas ${openIndex === `${category}-${index}` ? 'fa-minus' : 'fa-plus'} text-deep-sky-blue-600 transition-transform duration-300`}></i>
-                                        </button>
-                                        <div
-                                            id={`faq-answer-${category}-${index}`}
-                                            className={`px-5 pt-0 pb-5 text-steel-grey-600 transition-all duration-300 ease-in-out overflow-hidden ${openIndex === `${category}-${index}` ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}
-                                            style={{ maxHeight: openIndex === `${category}-${index}` ? '1000px' : '0' }} /* Arbitrary large max-height for smooth transition */
-                                        >
-                                            <p className="mt-2">{faq.answer}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+                    {/* Category Filter */}
+                    <div className="bg-white rounded-lg shadow-xl p-6 mb-12 text-center animate-fade-in-up delay-200">
+                        <label htmlFor="category-filter" className="block text-steel-grey-700 text-lg font-semibold mb-4">Filter by Category:</label>
+                        <div className="flex flex-wrap justify-center gap-3">
+                            {categories.map(category => (
+                                <button
+                                    key={category}
+                                    className={`py-2 px-5 rounded-full text-lg font-semibold transition-colors duration-300 ${
+                                        filterCategory === category
+                                            ? 'bg-deep-sky-blue-500 text-white shadow-md'
+                                            : 'bg-steel-grey-100 text-steel-grey-700 hover:bg-steel-grey-200'
+                                    } focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 focus:ring-opacity-50`}
+                                    onClick={() => setFilterCategory(category)}
+                                >
+                                    {category}
+                                </button>
+                            ))}
                         </div>
-                    ))}
-
-                    <div className="mt-12 text-center text-steel-grey-600">
-                        <p className="text-lg mb-4">Can't find your answer? Don't hesitate to reach out to us!</p>
-                        <button
-                            onClick={() => window.setPageAndPost('contact')}
-                            className="bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-terracotta-500"
-                            aria-label="Contact Us"
-                        >
-                            Contact Our Support Team
-                        </button>
                     </div>
-                </section>
+
+                    <div className="space-y-6 animate-fade-in-up delay-400">
+                        {filteredFAQs.length > 0 ? (
+                            filteredFAQs.map((faq, index) => (
+                                <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden border border-steel-grey-100">
+                                    <button
+                                        className="flex justify-between items-center w-full p-6 text-left focus:outline-none text-forest-green-600 hover:bg-light-brown-50 transition-colors duration-200"
+                                        onClick={() => toggleFAQ(index)}
+                                        aria-expanded={openIndex === index}
+                                        aria-controls={`faq-answer-${index}`}
+                                    >
+                                        <span className="text-xl font-semibold font-['Poppins']">{faq.question}</span>
+                                        <i className={`fas fa-chevron-down text-lg transform transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}></i>
+                                    </button>
+                                    <div
+                                        id={`faq-answer-${index}`}
+                                        className={`px-6 pb-6 text-steel-grey-700 text-lg transition-all duration-300 ease-in-out overflow-hidden ${
+                                            openIndex === index ? 'max-h-screen opacity-100 pt-2' : 'max-h-0 opacity-0'
+                                        }`}
+                                    >
+                                        <p className="border-t border-steel-grey-100 pt-4 mt-4">{faq.answer}</p>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="bg-white rounded-lg shadow-xl p-8 text-center text-terracotta-600 text-2xl font-semibold">
+                                No FAQs found for this category.
+                            </div>
+                        )}
+                    </div>
+                </div>
             );
         };
 
-        const Legal = () => (
-            <section className="container mx-auto py-16 px-6 animate-fade-in-up">
-                <h1 className="text-4xl font-bold text-center text-steel-grey-700 mb-12">Legal Information</h1>
+        const LegalPage = () => (
+            <div className="container mx-auto py-16 px-6 prose max-w-none text-steel-grey-700">
+                <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
+                    Legal Information
+                </h1>
 
-                <div className="bg-white rounded-xl shadow-lg p-8 border border-steel-grey-100 max-w-4xl mx-auto prose">
-                    <h2 className="text-3xl font-bold text-steel-grey-700 mb-6">Privacy Policy</h2>
-                    <p><strong>Last Updated: June 21, 2025</strong></p>
-                    <p>Adrenaline Rizz ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website <a href="#" onClick={(e) => { e.preventDefault(); window.setPageAndPost('home'); }} class="text-deep-sky-blue-600 hover:underline">www.adrenalinerizz.com</a>, including any other media form, media channel, mobile website, or mobile application related or connected thereto (collectively, the "Site"). Please read this Privacy Policy carefully. If you do not agree with the terms of this Privacy Policy, please do not access the Site.</p>
-                    <h3>1. Collection of Your Information</h3>
-                    <p>We may collect information about you in a variety of ways. The information we may collect on the Site includes:</p>
-                    <h4>Personal Data</h4>
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-200">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins']">Privacy Policy</h2>
+                    <p>
+                        At Adrenaline Rizz, we are committed to protecting your privacy. This policy outlines how we collect, use, and protect your personal information when you use our website and services.
+                    </p>
+                    <p>
+                        <strong>Information We Collect:</strong> We collect information you provide directly to us, such as when you create an account, book an adventure, or contact customer support. This may include your name, email address, phone number, payment information, and details related to your adventure preferences.
+                    </p>
+                    <p>
+                        <strong>How We Use Your Information:</strong> We use your information to:
+                    </p>
                     <ul>
-                        <li><strong>Voluntarily provided information:</strong> This includes your name, address, email address, phone number, and demographic information, that you voluntarily give to us when you register with the Site or when you choose to participate in various activities related to the Site, such as online chat and message boards.</li>
-                        <li><strong>Financial Data:</strong> Information regarding your payment method (e.g., valid credit card number, card brand, expiration date) that we may collect when you purchase, order, return, exchange, or request information about our services from the Site.</li>
+                        <li>Process and manage your bookings.</li>
+                        <li>Communicate with you about your activities and services.</li>
+                        <li>Improve our website, services, and user experience.</li>
+                        <li>Provide customer support.</li>
+                        <li>Send marketing and promotional communications (with your consent).</li>
                     </ul>
-                    <h4>Derivative Data</h4>
-                    <p>Information our servers automatically collect when you access the Site, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the Site.</p>
+                    <p>
+                        <strong>Information Sharing:</strong> We do not sell or rent your personal information to third parties. We may share your information with trusted third-party service providers (e.g., payment processors, adventure operators) only as necessary to provide our services to you.
+                    </p>
+                    <p>
+                        <strong>Security:</strong> We implement robust security measures to protect your data from unauthorized access, alteration, disclosure, or destruction.
+                    </p>
+                    <p>
+                        For full details, please <a href="#" onClick={() => {/* Simulate full policy link */ alert('Full Privacy Policy PDF/Page'); }} className="text-deep-sky-blue-600 hover:underline">read our complete Privacy Policy</a>.
+                    </p>
+                </section>
 
-                    <h2 className="text-3xl font-bold text-steel-grey-700 mt-12 mb-6">Terms of Service</h2>
-                    <p><strong>Last Updated: June 21, 2025</strong></p>
-                    <p>These Terms of Service ("Terms") govern your use of the Adrenaline Rizz website and services. By accessing or using our Site, you agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, please do not use our Site or services.</p>
-                    <h3>1. Acceptance of Terms</h3>
-                    <p>By using the services, you confirm that you are at least 18 years of age or have legal parental or guardian consent to enter into these Terms, and are fully able and competent to enter into the terms, conditions, obligations, affirmations, representations, and warranties set forth in these Terms, and to abide by and comply with these Terms.</p>
-                    <h3>2. Services Overview</h3>
-                    <p>Adrenaline Rizz provides an online platform that connects individuals seeking adventure sports activities ("Users") with third-party adventure activity operators ("Operators"). We facilitate the booking process and provide information about various activities. We do not directly operate any adventure activities.</p>
-                    <h3>3. Booking and Payments</h3>
+                <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins']">Terms of Service</h2>
+                    <p>
+                        Welcome to Adrenaline Rizz! By accessing or using our website and services, you agree to comply with and be bound by these Terms of Service.
+                    </p>
+                    <p>
+                        <strong>Acceptance of Terms:</strong> These Terms constitute a legally binding agreement between you and Adrenaline Rizz. If you do not agree with any part of these Terms, you must not use our services.
+                    </p>
+                    <p>
+                        <strong>Booking and Payments:</strong> All bookings are subject to availability and confirmation by the adventure operator. Payments are processed securely through our platform.
+                    </p>
+                    <p>
+                        <strong>User Responsibilities:</strong> You are responsible for providing accurate information, adhering to safety instructions from operators, and understanding the risks associated with adventure activities.
+                    </p>
+                    <p>
+                        <strong>Intellectual Property:</strong> All content on this website, including text, graphics, logos, and images, is the property of Adrenaline Rizz or its content suppliers and protected by copyright laws.
+                    </p>
+                    <p>
+                        <strong>Limitation of Liability:</strong> Adrenaline Rizz acts as an intermediary. While we vet our operators, we are not liable for any direct, indirect, incidental, special, or consequential damages arising from your participation in any activity booked through our platform, beyond what is covered by included insurance.
+                    </p>
+                    <p>
+                        For complete terms, please <a href="#" onClick={() => {/* Simulate full policy link */ alert('Full Terms of Service PDF/Page'); }} className="text-deep-sky-blue-600 hover:underline">read our full Terms of Service</a>.
+                    </p>
+                </section>
+
+                <section className="bg-white rounded-lg shadow-xl p-8 animate-fade-in-up delay-400">
+                    <h2 className="text-3xl font-bold text-forest-green-600 mb-6 font-['Poppins']">Refund & Cancellation Policy</h2>
+                    <p>
+                        Our refund and cancellation policy varies depending on the activity and the operator's specific terms.
+                    </p>
                     <ul>
-                        <li>All bookings made through Adrenaline Rizz are subject to the availability of the Operators.</li>
-                        <li>Prices for activities are displayed on the Site and are subject to change.</li>
-                        <li>Payments are processed securely through third-party payment gateways. Adrenaline Rizz does not store your full financial details.</li>
+                        <li><strong>Free Cancellation:</strong> Many activities offer free cancellation up to 48 hours before the scheduled activity time. Please check the individual activity page for specific details.</li>
+                        <li><strong>Late Cancellations:</strong> Cancellations made within 48 hours of the activity may incur a cancellation fee or be non-refundable.</li>
+                        <li><strong>No-Shows:</strong> No-shows are typically non-refundable.</li>
+                        <li><strong>Operator Cancellations:</strong> If an operator cancels an activity due to unforeseen circumstances (e.g., weather conditions, safety concerns), you will be offered a full refund or the option to reschedule.</li>
+                        <li><strong>Refund Processing:</strong> Refunds are typically processed within 7-10 business days.</li>
                     </ul>
-
-                    <h2 className="text-3xl font-bold text-steel-grey-700 mt-12 mb-6">Refund & Cancellation Policy</h2>
-                    <p><strong>Last Updated: June 21, 2025</strong></p>
-                    <p>Understanding our Refund & Cancellation Policy is crucial for all bookings made through Adrenaline Rizz. Please read carefully.</p>
-                    <h3>1. Free Cancellation Period</h3>
-                    <p>Most activities offer free cancellation up to <strong>48 hours</strong> before the scheduled activity start time. This allows for a full refund (excluding any non-refundable booking fees, if applicable).</p>
-                    <h3>2. Cancellations within 48 Hours</h3>
-                    <p>Cancellations made within 48 hours of the activity start time are generally non-refundable. However, exceptions may be made in cases of documented emergencies or extenuating circumstances, subject to operator discretion.</p>
-                    <h3>3. Operator Cancellation</h3>
-                    <p>If an activity is cancelled by the operator due to unforeseen circumstances (e.g., weather conditions, safety concerns, insufficient participants), you will be offered a full refund or the option to reschedule the activity. We will notify you as soon as possible in such cases.</p>
-                    <h3>4. Rescheduling</h3>
-                    <p>Rescheduling requests are subject to operator availability and may incur additional charges, especially if requested within 48 hours of the original booking time.</p>
-
-                    <h2 className="text-3xl font-bold text-steel-grey-700 mt-12 mb-6">Safety Guidelines</h2>
-                    <p><strong>Last Updated: June 21, 2025</strong></p>
-                    <p>Your safety is our utmost priority at Adrenaline Rizz. While we partner with verified operators, it is essential for you to understand and adhere to general safety guidelines.</p>
-                    <h3>1. Operator Instructions</h3>
-                    <p>Always listen to and follow all instructions provided by your activity operator and instructors. They are trained professionals.</p>
-                    <h3>2. Medical Conditions</h3>
-                    <p>Inform your operator of any medical conditions, allergies, or physical limitations prior to the activity. Consult your doctor if you have any doubts about your fitness for an activity.</p>
-                    <h3>3. Equipment Check</h3>
-                    <p>Ensure your safety equipment is properly fitted and checked by an instructor before starting any activity.</p>
-                    <h3>4. Alcohol & Drugs</h3>
-                    <p>Consumption of alcohol or recreational drugs is strictly prohibited before and during any adventure activity.</p>
-                    <h3>5. Personal Belongings</h3>
-                    <p>Avoid carrying loose jewelry, phones, or other valuables during activities that could get lost or damaged.</p>
-                    <p>For specific safety guidelines related to each activity, please refer to the activity details page or contact us.</p>
-                </div>
-            </section>
+                    <p>
+                        It is highly recommended to review the specific cancellation policy on each activity's booking page before confirming your reservation.
+                    </p>
+                    <p>
+                        For more details, please <a href="#" onClick={() => {/* Simulate full policy link */ alert('Full Refund Policy PDF/Page'); }} className="text-deep-sky-blue-600 hover:underline">read our detailed Refund Policy</a>.
+                    </p>
+                </section>
+            </div>
         );
+
 
         // --- Main App Component ---
         const App = () => {
             const [currentPage, setCurrentPage] = useState('home');
             const [isMenuOpen, setIsMenuOpen] = useState(false);
-            const [selectedBlogPost, setSelectedBlogPost] = useState(null);
-            const [cookieConsent, setCookieConsent] = useState(localStorage.getItem('cookieConsent') === 'true');
+            const [selectedBlogPost, setSelectedBlogPost] = useState(null); // State for single blog post view
 
-            // Make state setters globally accessible for inline onclicks in dangerouslySetInnerHTML
+            // Expose setters to global scope for onClick handlers in dangerouslySetInnerHTML
+            // This is a workaround for this CDN/Babel setup.
             useEffect(() => {
                 appSetCurrentPage = setCurrentPage;
                 appSetSelectedBlogPost = setSelectedBlogPost;
-                // Clean up global references on component unmount (though this app won't unmount in this setup)
-                return () => {
-                    appSetCurrentPage = null;
-                    appSetSelectedBlogPost = null;
-                };
-            }, []); // Empty dependency array means this runs once on mount
+            }, []);
 
-            const handleAcceptCookies = () => {
-                localStorage.setItem('cookieConsent', 'true');
-                setCookieConsent(true);
-            };
+            // Close mobile menu on page change
+            useEffect(() => {
+                setIsMenuOpen(false);
+            }, [currentPage, selectedBlogPost]);
 
-            const handleDeclineCookies = () => {
-                localStorage.setItem('cookieConsent', 'false');
-                setCookieConsent(false);
-                // In a real app, you'd add logic here to remove/disable non-essential cookies.
-            };
 
             // Conditional rendering based on currentPage state
             const renderPage = () => {
+                if (selectedBlogPost) {
+                    return <BlogPostPage post={selectedBlogPost} setSelectedBlogPost={setSelectedBlogPost} />;
+                }
+
                 switch (currentPage) {
                     case 'home':
-                        return <Home setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} activities={activities} testimonials={testimonials} blogPosts={blogPosts} />;
+                        return (
+                            <>
+                                <HeroSection setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />
+                                <FeaturedActivities activities={activities} setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />
+                                <WhyChooseUs />
+                                <TestimonialsSection testimonials={testimonials} />
+                                <CallToActionSection setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />
+                            </>
+                        );
                     case 'about':
-                        return <About teamMembers={teamMembers} />;
+                        return <AboutUsPage teamMembers={teamMembers} setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />;
                     case 'adventures':
-                        return <Adventures activities={activities} setCurrentPage={setCurrentPage} />;
+                        return <AdventuresPage activities={activities} />;
                     case 'pricing':
-                        return <Pricing />;
+                        return <PricingPage />;
                     case 'blog':
-                        return <Blog blogPosts={blogPosts} setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />;
-                    case 'blogPost':
-                        return <BlogPostDetail post={selectedBlogPost} setCurrentPage={setCurrentPage} />;
-                    case 'joinus': // New case for Join Us page
-                        return <JoinUsForOperators />;
+                        return <BlogPage blogPosts={blogPosts} setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />;
+                    case 'joinus':
+                        return <JoinUsPage />;
                     case 'contact':
-                        return <Contact />;
+                        return <ContactPage />;
                     case 'faqs':
-                        return <FAQs faqs={faqs} />;
+                        return <FAQsPage faqs={faqs} />;
                     case 'legal':
-                        return <Legal />;
+                        return <LegalPage />;
                     default:
-                        return <Home setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} activities={activities} testimonials={testimonials} blogPosts={blogPosts} />;
+                        return <HeroSection setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />; // Fallback to Home
                 }
             };
 
@@ -1335,17 +1361,13 @@
                     <main className="flex-grow">
                         {renderPage()}
                     </main>
-                    <Footer setCurrentPage={setCurrentPage} />
-                    {!cookieConsent && <CookieConsentBanner onAccept={handleAcceptCookies} onDecline={handleDeclineCookies} />}
+                    <Footer setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />
                 </>
             );
         };
 
-        // Render the main App component into the root div
-        window.addEventListener('DOMContentLoaded', () => {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
-        });
+        // Render the React application
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
