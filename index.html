@@ -128,15 +128,15 @@
     <div id="root" class="flex-grow flex flex-col"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
+        const { useState, useEffect, useCallback } = React;
 
-        // --- Global Navigation State Management (HACKY FOR CDN/Babel, but functional) ---
-        // These variables will hold the state setters from the main App component,
-        // allowing inline onClick handlers in dangerouslySetInnerHTML to trigger navigation.
+        // --- Global Navigation & Analytics State Management ---
+        // These variables will hold the state setters from the main App component.
         let appSetCurrentPage = null;
         let appSetSelectedBlogPost = null;
-        let appSetSelectedActivityForBooking = null; // New global setter for booking
-        let appSetBookingStep = null; // New global setter for booking step
+        let appSetSelectedActivityForBooking = null;
+        let appSetBookingStep = null;
+        let trackEvent = () => console.error("Analytics trackEvent function not yet initialized."); // Placeholder for analytics
 
         // This global function is called by the onClick handlers in blog post content.
         window.setPageAndPost = (page, post = null) => {
@@ -152,6 +152,7 @@
         // This global function is called for booking navigation
         window.startBooking = (activity) => {
             if (appSetCurrentPage && appSetSelectedActivityForBooking && appSetBookingStep) {
+                trackEvent('booking_start', { activityId: activity.id, activityName: activity.name });
                 appSetSelectedActivityForBooking(activity);
                 appSetBookingStep(1); // Start at step 1
                 appSetCurrentPage('booking');
@@ -196,7 +197,7 @@
                 
                 <strong>4. Coorg, Karnataka:</strong> Known as the 'Scotland of India', Coorg offers lush landscapes perfect for <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">trekking</a>, waterfall rappelling, and off-roading. The misty hills provide a refreshing escape.
                 
-                <strong>5. Manali, Himachal Pradesh:</strong> A gateway to numerous Himalayan adventures, Manali is ideal for <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">paragliding</a>, <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">snow biking</a>, and skiing in winter. The surrounding valleys offer stunning vistas and thrilling experiences.
+                <strong>5. Manali, Himachal Pradesh:</strong> A gateway to numerous Himalayan adventures, Manali is ideal for <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-deep-sky-blue-600 hover:underline">paragliding</a>, <a href="#" onclick="window.startBooking({ id: 'snowbiking' }); return false;" class="text-deep-sky-blue-600 hover:underline">snow biking</a>, and skiing in winter. The surrounding valleys offer stunning vistas and thrilling experiences.
                 
                 <strong>Ready to explore these destinations?</strong> <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-terracotta-600 hover:underline font-bold">Book your adventure today!</a>`
             },
@@ -220,7 +221,7 @@
                 
                 <strong>Remember:</strong> Every Adrenaline Rizz booking includes injury insurance for your peace of mind. Your adventure, our priority!
                 
-                <strong>Feeling ready to take the leap?</strong> <a href="#" onclick="window.setPageAndPost('adventures'); return false;" class="text-terracotta-600 hover:underline font-bold">Find your bungee jumping experience here!</a>`
+                <strong>Feeling ready to take the leap?</strong> <a href="#" onclick="window.startBooking({ id: 'bungeejumping' }); return false;" class="text-terracotta-600 hover:underline font-bold">Find your bungee jumping experience here!</a>`
             },
             {
                 id: 3, title: 'Understanding Adventure Insurance: What Adrenaline Rizz Covers',
@@ -324,8 +325,16 @@
         ];
 
         const teamMembers = [
-            { name: 'Udhav Bindal', title: 'Founder', bio: 'SRCC alumnus, passionate traveler, and a relentless seeker of change. Udhav founded Adrenaline Rizz to revolutionize India\'s adventure industry.', image: 'https://i.postimg.cc/fTtmGWGw/65a00adb886f83d02129e022-3.jpg', alt: 'Udhav Bindal' },
+            {
+                name: 'Udhav Bindal',
+                title: 'Founder & CEO',
+                image: 'https://placehold.co/160x160/D3D3D3/000000?text=Udhav+Bindal',
+                alt: 'Udhav Bindal',
+                bio: 'SRCC alumnus, passionate traveler, and a relentless seeker of change. Udhav founded Adrenaline Rizz to revolutionize India\'s adventure industry.'
+            },
+            // Add more team members as needed
         ];
+
 
         const faqs = [
             { category: 'General', question: 'How does Adrenaline Rizz work?', answer: 'Adrenaline Rizz connects you with verified adventure operators across India, allowing you to book thrilling activities with real-time slot selection and insurance included.' },
@@ -345,7 +354,7 @@
 
         const Navbar = ({ setCurrentPage, isMenuOpen, setIsMenuOpen, setSelectedBlogPost, currentPage }) => (
             <nav className="container mx-auto flex justify-between items-center py-4 px-6 relative z-30">
-                <a href="#" className="text-3xl font-bold tracking-tight text-[#8B4513] z-20 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500" onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>
+                <a href="#" className="text-3xl font-bold tracking-tight text-[#8B4513] z-20 rounded-md focus:outline-none focus:ring-2 focus:ring-terracotta-500" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>
                     Adrenaline Rizz
                 </a>
                 <button className="md:hidden text-[#8B4513] focus:outline-none z-20 order-last rounded-md focus:ring-2 focus:ring-terracotta-500 p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -359,81 +368,109 @@
                 <ul className={`absolute md:relative top-full right-0 md:top-auto md:right-auto ${isMenuOpen ? 'block translate-x-0' : 'hidden translate-x-full'} md:flex flex-col md:flex-row md:space-x-6 text-lg transition-all duration-300 ease-in-out transform md:translate-x-0 md:items-center bg-terracotta-600 md:bg-transparent p-4 md:p-0 rounded-lg shadow-lg md:shadow-none md:rounded-none z-40 w-48 md:w-auto`}>
                     {/* Links use text-base for smaller font on mobile dropdown */}
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'home' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Home</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'home' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('home'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Home</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'about' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('about'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>About Us</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'about' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('about'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>About Us</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'adventures' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Adventures</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'adventures' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('adventures'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Adventures</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'pricing' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('pricing'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Pricing</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'pricing' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('pricing'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Pricing</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'blog' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('blog'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Blog</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'blog' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('blog'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Blog</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'joinus' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('joinus'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Join Us</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'joinus' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('joinus'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Join Us</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'contact' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('contact'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Contact</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'contact' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('contact'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Contact</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'faqs' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('faqs'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>FAQs</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'faqs' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('faqs'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>FAQs</a>
                     </li>
                     <li className="mb-2 md:mb-0">
-                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'legal' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Legal</a>
+                        <a href="#" className={`py-1 block text-white md:text-[#8B4513] text-base md:text-lg hover:text-amber-200 transition-colors duration-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-200 ${currentPage === 'legal' ? 'md:bg-terracotta-100 md:text-terracotta-700 md:px-3 md:py-2 md:rounded-md' : ''}`} onClick={(e) => { e.preventDefault(); setCurrentPage('legal'); setSelectedBlogPost(null); setIsMenuOpen(false); }}>Legal</a>
                     </li>
                 </ul>
             </nav>
         );
 
-        const Footer = ({ setCurrentPage, setSelectedBlogPost }) => (
-            <footer className="bg-forest-green-700 text-white py-8 px-6 mt-auto">
-                <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-                    {/* Brand Info */}
-                    <div className="col-span-1 md:col-span-2">
-                        <h3 className="text-3xl font-bold mb-4 text-light-brown-50">Adrenaline Rizz</h3>
-                        <p className="text-sm text-light-brown-50 leading-relaxed">
-                            Your ultimate gateway to India's most exhilarating adventures. We connect thrill-seekers with verified operators, ensuring safety, unforgettable experiences, and peace of mind.
-                        </p>
-                        <div className="flex space-x-4 mt-4">
-                            <a href="#" aria-label="Facebook" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-facebook-f fa-lg"></i></a>
-                            <a href="#" aria-label="Twitter" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-twitter fa-lg"></i></a>
-                            <a href="#" aria-label="Instagram" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-instagram fa-lg"></i></a>
-                            <a href="#" aria-label="LinkedIn" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-linkedin-in fa-lg"></i></a>
+        const Footer = ({ setCurrentPage, setSelectedBlogPost, analyticsEvents }) => {
+            // Function to handle the export of analytics data
+            const exportAnalyticsData = () => {
+                const dataStr = JSON.stringify(analyticsEvents, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = 'adrenaline-rizz-analytics.json';
+
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                trackEvent('analytics_export', { eventCount: analyticsEvents.length });
+            };
+
+            return (
+                <footer className="bg-forest-green-700 text-white py-8 px-6 mt-auto">
+                    <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+                        {/* Brand Info */}
+                        <div className="col-span-1 md:col-span-2">
+                            <h3 className="text-3xl font-bold mb-4 text-light-brown-50">Adrenaline Rizz</h3>
+                            <p className="text-sm text-light-brown-50 leading-relaxed">
+                                Your ultimate gateway to India's most exhilarating adventures. We connect thrill-seekers with verified operators, ensuring safety, unforgettable experiences, and peace of mind.
+                            </p>
+                            <div className="flex space-x-4 mt-4">
+                                <a href="#" aria-label="Facebook" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-facebook-f fa-lg"></i></a>
+                                <a href="#" aria-label="Twitter" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-twitter fa-lg"></i></a>
+                                <a href="#" aria-label="Instagram" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-instagram fa-lg"></i></a>
+                                <a href="#" aria-label="LinkedIn" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300"><i className="fab fa-linkedin-in fa-lg"></i></a>
+                            </div>
+                        </div>
+
+                        {/* Quick Links */}
+                        <div>
+                            <h4 className="text-xl font-semibold mb-4 text-light-brown-50">Quick Links</h4>
+                            <ul className="space-y-2">
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('home'); setSelectedBlogPost(null); }}>Home</a></li>
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('adventures'); setSelectedBlogPost(null); }}>Adventures</a></li>
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('about'); setSelectedBlogPost(null); }}>About Us</a></li>
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('blog'); setSelectedBlogPost(null); }}>Blog</a></li>
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('faqs'); setSelectedBlogPost(null); }}>FAQs</a></li>
+                            </ul>
+                        </div>
+
+                        {/* Legal & Support */}
+                        <div>
+                            <h4 className="text-xl font-semibold mb-4 text-light-brown-50">Support</h4>
+                            <ul className="space-y-2">
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('contact'); setSelectedBlogPost(null); }}>Contact Us</a></li>
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('legal'); setSelectedBlogPost(null); }}>Privacy Policy</a></li>
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('legal'); setSelectedBlogPost(null); }}>Terms of Service</a></li>
+                                <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={(e) => { e.preventDefault(); setCurrentPage('legal'); setSelectedBlogPost(null); }}>Refund Policy</a></li>
+                            </ul>
                         </div>
                     </div>
-
-                    {/* Quick Links */}
-                    <div>
-                        <h4 className="text-xl font-semibold mb-4 text-light-brown-50">Quick Links</h4>
-                        <ul className="space-y-2">
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('home'); setSelectedBlogPost(null); }}>Home</a></li>
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}>Adventures</a></li>
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('about'); setSelectedBlogPost(null); }}>About Us</a></li>
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('blog'); setSelectedBlogPost(null); }}>Blog</a></li>
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('faqs'); setSelectedBlogPost(null); }}>FAQs</a></li>
-                        </ul>
+                    
+                    {/* Analytics Export Section */}
+                    <div className="container mx-auto border-t border-forest-green-600 mt-8 pt-6 text-center">
+                        <h4 className="text-lg font-semibold mb-2 text-light-brown-50">Admin Tools</h4>
+                        <button 
+                            onClick={exportAnalyticsData}
+                            className="bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-2 px-4 rounded-full text-sm transition duration-300 ease-in-out transform hover:scale-105 shadow-md focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:ring-opacity-70"
+                        >
+                            <i className="fas fa-download mr-2"></i> Export Analytics Data ({analyticsEvents.length} events)
+                        </button>
                     </div>
 
-                    {/* Legal & Support */}
-                    <div>
-                        <h4 className="text-xl font-semibold mb-4 text-light-brown-50">Support</h4>
-                        <ul className="space-y-2">
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('contact'); setSelectedBlogPost(null); }}>Contact Us</a></li>
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); }}>Privacy Policy</a></li>
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); }}>Terms of Service</a></li>
-                            <li><a href="#" className="text-light-brown-50 hover:text-terracotta-500 transition-colors duration-300 text-sm" onClick={() => { setCurrentPage('legal'); setSelectedBlogPost(null); }}>Refund Policy</a></li>
-                        </ul>
+                    <div className="container mx-auto border-t border-forest-green-600 mt-6 pt-6 text-center text-sm text-light-brown-100">
+                        &copy; {new Date().getFullYear()} Adrenaline Rizz. All rights reserved.
                     </div>
-                </div>
-                <div className="container mx-auto border-t border-forest-green-600 mt-8 pt-8 text-center text-sm text-light-brown-100">
-                    &copy; {new Date().getFullYear()} Adrenaline Rizz. All rights reserved.
-                </div>
-            </footer>
-        );
+                </footer>
+            )
+        };
 
         // --- Page Components ---
 
@@ -450,7 +487,11 @@
                     </p>
                     <button
                         className="bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50"
-                        onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}
+                        onClick={() => { 
+                            trackEvent('cta_click', { source: 'hero_section' });
+                            setCurrentPage('adventures'); 
+                            setSelectedBlogPost(null); 
+                        }}
                     >
                         Explore Adventures
                     </button>
@@ -469,20 +510,19 @@
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {featured.map(activity => (
-                                <div key={activity.id} className="bg-white rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer border border-steel-grey-100"
-                                     onClick={() => { /* Implement specific activity detail page navigation later */ }}>
+                                <div key={activity.id} className="bg-white rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl border border-steel-grey-100 flex flex-col">
                                     <div className="relative h-60 overflow-hidden">
                                         <img src={activity.image} alt={activity.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x300/CCCCCC/000000?text=${activity.name.replace(/\s/g, '+')}`; }} />
                                         <div className="absolute top-4 left-4 bg-terracotta-500 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
                                             Featured
                                         </div>
                                     </div>
-                                    <div className="p-6">
+                                    <div className="p-6 flex flex-col flex-grow">
                                         <h3 className="text-2xl font-bold text-forest-green-600 mb-2 font-['Poppins']">
                                             {activity.name}
                                         </h3>
-                                        <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed">{activity.description}</p>
-                                        <div className="flex justify-between items-center text-lg font-semibold text-terracotta-700">
+                                        <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed flex-grow">{activity.description}</p>
+                                        <div className="flex justify-between items-center text-lg font-semibold text-terracotta-700 mt-auto">
                                             <span>{activity.location}</span>
                                             <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.displayPrice}</span>
                                         </div>
@@ -499,7 +539,11 @@
                         <div className="text-center mt-12">
                             <button
                                 className="bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50"
-                                onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}
+                                onClick={() => { 
+                                    trackEvent('navigation_click', { destination: 'adventures_page', source: 'featured_activities' });
+                                    setCurrentPage('adventures'); 
+                                    setSelectedBlogPost(null); 
+                                }}
                             >
                                 View All Adventures <i className="fas fa-arrow-right ml-2"></i>
                             </button>
@@ -612,7 +656,11 @@
                     </p>
                     <button
                         className="bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-4 px-10 rounded-full text-xl md:text-2xl transition duration-300 ease-in-out transform hover:scale-105 shadow-xl focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-70"
-                        onClick={() => { setCurrentPage('adventures'); setSelectedBlogPost(null); }}
+                        onClick={() => { 
+                            trackEvent('cta_click', { source: 'bottom_cta_section' });
+                            setCurrentPage('adventures'); 
+                            setSelectedBlogPost(null); 
+                        }}
                     >
                         Book Your Thrill Today! <i className="fas fa-bolt ml-3"></i>
                     </button>
@@ -708,6 +756,21 @@
             const [filterFirstTime, setFilterFirstTime] = useState(false);
             const [filterFemaleStaff, setFilterFemaleStaff] = useState(false);
             const [searchTerm, setSearchTerm] = useState('');
+
+            // Analytics for filter changes
+            useEffect(() => {
+                const handler = setTimeout(() => {
+                    if (searchTerm) {
+                        trackEvent('search', { term: searchTerm });
+                    }
+                }, 500); // Debounce search tracking
+                return () => clearTimeout(handler);
+            }, [searchTerm]);
+
+            useEffect(() => { trackEvent('filter_change', { filter: 'type', value: filterType }); }, [filterType]);
+            useEffect(() => { trackEvent('filter_change', { filter: 'location', value: filterLocation }); }, [filterLocation]);
+            useEffect(() => { trackEvent('filter_change', { filter: 'firstTime', value: filterFirstTime }); }, [filterFirstTime]);
+            useEffect(() => { trackEvent('filter_change', { filter: 'femaleStaff', value: filterFemaleStaff }); }, [filterFemaleStaff]);
 
             const activityTypes = ['All', ...new Set(activities.map(a => a.type))];
             const activityLocations = ['All', ...new Set(activities.map(a => a.location))];
@@ -805,7 +868,7 @@
                     {filteredActivities.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filteredActivities.map(activity => (
-                                <div key={activity.id} className="bg-white rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer border border-steel-grey-100">
+                                <div key={activity.id} className="bg-white rounded-lg shadow-xl overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl border border-steel-grey-100 flex flex-col">
                                     <div className="relative h-60 overflow-hidden">
                                         <img src={activity.image} alt={activity.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x300/CCCCCC/000000?text=${activity.name.replace(/\s/g, '+')}`; }} />
                                         {activity.featured && (
@@ -814,11 +877,11 @@
                                             </div>
                                         )}
                                     </div>
-                                    <div className="p-6">
+                                    <div className="p-6 flex flex-col flex-grow">
                                         <h3 className="text-2xl font-bold text-forest-green-600 mb-2 font-['Poppins']">
                                             {activity.name}
                                         </h3>
-                                        <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed">{activity.description}</p>
+                                        <p className="text-steel-grey-700 mb-4 text-sm leading-relaxed flex-grow">{activity.description}</p>
                                         <div className="flex justify-between items-center text-lg font-semibold text-terracotta-700">
                                             <span><i className="fas fa-map-marker-alt mr-2 text-deep-sky-blue-600"></i>{activity.location}</span>
                                             <span className="bg-forest-green-100 text-forest-green-700 px-4 py-2 rounded-full">{activity.displayPrice}</span>
@@ -859,7 +922,7 @@
             );
         };
 
-        const PricingPage = () => (
+        const PricingPage = ({setCurrentPage}) => (
             <div className="container mx-auto py-16 px-6">
                 <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
                     Simple & Transparent Pricing
@@ -882,7 +945,7 @@
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>24/7 Customer Support</li>
                                 <li className="flex items-center opacity-60"><i className="fas fa-times-circle text-steel-grey-400 mr-2"></i>Premium Photo/Video Pack</li>
                             </ul>
-                            <button className="w-full bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50">
+                            <button onClick={() => setCurrentPage('adventures')} className="w-full bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50">
                                 View Adventures
                             </button>
                         </div>
@@ -901,7 +964,7 @@
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Priority Customer Support</li>
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i><strong>Free Basic Photo Pack</strong></li>
                             </ul>
-                            <button className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50">
+                            <button onClick={() => setCurrentPage('adventures')} className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50">
                                 Choose This Plan
                             </button>
                         </div>
@@ -917,7 +980,7 @@
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Dedicated Group Coordinator</li>
                                 <li className="flex items-center"><i className="fas fa-check-circle text-deep-sky-blue-500 mr-2"></i>Discounted Rates (5+ people)</li>
                             </ul>
-                            <button className="w-full bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50">
+                            <button onClick={() => setCurrentPage('contact')} className="w-full bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 shadow-md focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50">
                                 Get a Custom Quote
                             </button>
                         </div>
@@ -928,11 +991,11 @@
                     <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Important Notes</h2>
                     <ul className="list-disc list-inside text-lg text-steel-grey-700 leading-relaxed space-y-3 mx-auto max-w-4xl">
                         <li>Prices listed on individual adventure pages are for the "Basic Thrill" package unless otherwise specified.</li>
-                        <li>The "Pro Adventurer" upgrade includes additional benefits as listed, and is an optional add-on.</li>
+                        <li>The "Pro Adventurer" upgrade includes additional benefits as listed, and is an optional add-on during booking.</li>
                         <li>Group packages require a minimum of 5 participants for discounted rates. Contact us for a personalized quote.</li>
                         <li>All prices are inclusive of applicable taxes unless stated otherwise.</li>
                         <li>Payment methods include major credit/debit cards, net banking, and select digital wallets.</li>
-                        <li>For details on our Refund & Cancellation Policy, please refer to the <a href="#" onClick={() => { setCurrentPage('legal'); }} className="text-deep-sky-blue-600 hover:underline font-semibold">Legal section</a>.</li>
+                        <li>For details on our Refund & Cancellation Policy, please refer to the <a href="#" onClick={(e) => { e.preventDefault(); setCurrentPage('legal'); }} className="text-deep-sky-blue-600 hover:underline font-semibold">Legal section</a>.</li>
                     </ul>
                 </section>
             </div>
@@ -1092,7 +1155,7 @@
                     <div className="text-center mt-12">
                         <button
                             className="bg-deep-sky-blue-500 hover:bg-deep-sky-blue-600 text-white font-bold py-3 px-8 rounded-full text-xl transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-deep-sky-blue-500 focus:ring-opacity-50"
-                            onClick={() => alert('Opening Partner Application Form')} // Placeholder for actual form link/modal
+                            onClick={() => console.log('Partner Application Form would open here.')} // Replaced alert with console log
                         >
                             Apply Now! <i className="fas fa-paper-plane ml-2"></i>
                         </button>
@@ -1128,7 +1191,7 @@
                         <div className="p-6 border border-steel-grey-100 rounded-lg shadow-md">
                             <i className="fas fa-map-marker-alt fa-3x text-terracotta-500 mb-4"></i>
                             <h3 className="text-xl font-semibold text-forest-green-600 mb-2">Our Office</h3>
-                            <p className="text-steel-grey-700 mb-2">123 Adventure Lane, Thrill City, India</p>
+                            <p className="text-steel-grey-700 mb-2">123 Adventure Lane, Meerut, Uttar Pradesh, India</p>
                             <p className="text-sm text-steel-grey-600">(Visits by appointment only)</p>
                         </div>
                     </div>
@@ -1185,19 +1248,19 @@
 
                     {/* Category Filter */}
                     <div className="bg-white rounded-lg shadow-xl p-6 mb-12 text-center animate-fade-in-up delay-200">
-                        <label htmlFor="category-filter" className="block text-steel-grey-700 text-lg font-semibold mb-4">Filter by Topic:</label>
+                        <label htmlFor="tag-filter" className="block text-steel-grey-700 text-lg font-semibold mb-4">Filter by Topic:</label>
                         <div className="flex flex-wrap justify-center gap-3">
-                            {categories.map(category => (
+                            {categories.map(tag => ( // Changed 'tags' to 'categories' here
                                 <button
-                                    key={category}
+                                    key={tag}
                                     className={`py-2 px-5 rounded-full text-lg font-semibold transition-colors duration-300 ${
-                                        filterCategory === category
+                                        filterCategory === tag
                                             ? 'bg-deep-sky-blue-500 text-white shadow-md'
                                             : 'bg-steel-grey-100 text-steel-grey-700 hover:bg-steel-grey-200'
                                     } focus:outline-none focus:ring-2 focus:ring-deep-sky-blue-500 focus:ring-opacity-50`}
-                                    onClick={() => setFilterCategory(category)}
+                                    onClick={() => setFilterCategory(tag)}
                                 >
-                                    {category}
+                                    {tag}
                                 </button>
                             ))}
                         </div>
@@ -1236,7 +1299,7 @@
             );
         };
 
-        const LegalPage = () => (
+        const LegalPage = ({setCurrentPage}) => (
             <div className="container mx-auto py-16 px-6 prose max-w-none text-steel-grey-700">
                 <h1 className="text-5xl font-extrabold text-center text-terracotta-700 mb-12 font-['Montserrat'] animate-fade-in-up">
                     Legal Information
@@ -1266,9 +1329,6 @@
                     <p>
                         <strong>Security:</strong> We implement robust security measures to protect your data from unauthorized access, alteration, disclosure, or destruction.
                     </p>
-                    <p>
-                        For full details, please <a href="#" onClick={() => {/* Simulate full policy link */ alert('Full Privacy Policy PDF/Page'); }} className="text-deep-sky-blue-600 hover:underline">read our complete Privacy Policy</a>.
-                    </p>
                 </section>
 
                 <section className="bg-white rounded-lg shadow-xl p-8 mb-12 animate-fade-in-up delay-400">
@@ -1291,9 +1351,6 @@
                     <p>
                         <strong>Limitation of Liability:</strong> Adrenaline Rizz acts as an intermediary. While we vet our operators, we are not liable for any direct, indirect, incidental, special, or consequential damages arising from your participation in any activity booked through our platform, beyond what is covered by included insurance.
                     </p>
-                    <p>
-                        For complete terms, please <a href="#" onClick={() => {/* Simulate full policy link */ alert('Full Terms of Service PDF/Page'); }} className="text-deep-sky-blue-600 hover:underline">read our full Terms of Service</a>.
-                    </p>
                 </section>
 
                 <section className="bg-white rounded-lg shadow-xl p-8 animate-fade-in-up delay-400">
@@ -1310,9 +1367,6 @@
                     </ul>
                     <p>
                         It is highly recommended to review the specific cancellation policy on each activity's booking page before confirming your reservation.
-                    </p>
-                    <p>
-                        For more details, please <a href="#" onClick={() => {/* Simulate full policy link */ alert('Full Refund Policy PDF/Page'); }} className="text-deep-sky-blue-600 hover:underline">read our detailed Refund Policy</a>.
                     </p>
                 </section>
             </div>
@@ -1346,29 +1400,27 @@
             const recommendedActivities = activities.filter(a => a.id !== activity.id)
                                                     .sort(() => 0.5 - Math.random()) // Shuffle
                                                     .slice(0, 3); // Get top 3
-
+            
+            // Analytics for booking step changes
             useEffect(() => {
-                // Reset form and addons if activity changes or flow restarts
+                trackEvent('booking_step_view', { step: bookingStep, activityId: activity.id });
+            }, [bookingStep, activity.id]);
+
+
+            // This effect resets the booking flow when the user starts booking a new activity.
+            useEffect(() => {
                 setFormData({
-                    fullName: '',
-                    email: '',
-                    phone: '',
-                    dob: '',
-                    emergencyContactName: '',
-                    emergencyContactPhone: '',
-                    agreedToTerms: false,
+                    fullName: '', email: '', phone: '', dob: '',
+                    emergencyContactName: '', emergencyContactPhone: '', agreedToTerms: false,
                 });
-                setSelectedAddons({
-                    proAdventurer: false,
-                    premiumPhoto: false,
-                });
+                setSelectedAddons({ proAdventurer: false, premiumPhoto: false });
                 setIsProcessingPayment(false);
                 setPaymentSuccess(null);
                 setConfirmationNumber('');
-                setSelectedDate(null); // Reset date
-                setSelectedTimeSlot(null); // Reset time slot
-                setCurrentMonth(new Date()); // Reset calendar to current month
-            }, [activity]);
+                setSelectedDate(null);
+                setSelectedTimeSlot(null);
+                setCurrentMonth(new Date());
+            }, [activity.id]);
 
             const handleInputChange = (e) => {
                 const { name, value, type, checked } = e.target;
@@ -1377,8 +1429,9 @@
                     [name]: type === 'checkbox' ? checked : value,
                 });
             };
-
-            const validateStep1 = () => {
+            
+            // Validation logic for user details
+            const validateStep1 = useCallback(() => {
                 const errors = {};
                 if (!selectedDate) errors.selectedDate = 'Please select a date';
                 if (!selectedTimeSlot) errors.selectedTimeSlot = 'Please select a time slot';
@@ -1386,36 +1439,42 @@
                 if (!formData.email.trim()) errors.email = 'Email is required';
                 else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'Email is invalid';
                 if (!formData.phone.trim()) errors.phone = 'Phone Number is required';
+                else if (!/^[6-9]\d{9}$/.test(formData.phone)) errors.phone = 'Please enter a valid 10-digit Indian mobile number.';
                 if (!formData.dob.trim()) errors.dob = 'Date of Birth is required';
                 if (!formData.emergencyContactName.trim()) errors.emergencyContactName = 'Emergency Contact Name is required';
                 if (!formData.emergencyContactPhone.trim()) errors.emergencyContactPhone = 'Emergency Contact Phone is required';
+                else if (!/^[6-9]\d{9}$/.test(formData.emergencyContactPhone)) errors.emergencyContactPhone = 'Please enter a valid 10-digit Indian mobile number.';
                 if (!formData.agreedToTerms) errors.agreedToTerms = 'You must agree to the terms';
                 setFormErrors(errors);
                 return Object.keys(errors).length === 0;
-            };
+            }, [formData, selectedDate, selectedTimeSlot]);
 
             const handleNextStep = () => {
                 if (bookingStep === 1) {
                     if (validateStep1()) {
                         setBookingStep(2);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
                 } else if (bookingStep === 2) {
                     setBookingStep(3);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
             };
 
             const handlePrevStep = () => {
                 setBookingStep(bookingStep - 1);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
             const handleAddonToggle = (addonName) => {
+                trackEvent('addon_toggle', { addon: addonName, selected: !selectedAddons[addonName] });
                 setSelectedAddons(prev => ({
                     ...prev,
                     [addonName]: !prev[addonName],
                 }));
             };
 
-            const calculateTotalPrice = () => {
+            const calculateTotalPrice = useCallback(() => {
                 let total = activity.basePrice;
                 if (selectedAddons.proAdventurer) {
                     total += ADDON_PRO_ADVENTURER_PRICE;
@@ -1424,20 +1483,37 @@
                     total += ADDON_PREMIUM_PHOTO_PACK_PRICE;
                 }
                 return total;
-            };
+            }, [activity.basePrice, selectedAddons]);
 
             const handlePaymentSubmit = () => {
                 setIsProcessingPayment(true);
+                setPaymentSuccess(null);
                 // Simulate payment processing
                 setTimeout(() => {
                     const success = Math.random() > 0.1; // 90% chance of success
+                    const newConfirmationNumber = `ADRIZZ-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+
                     setIsProcessingPayment(false);
                     setPaymentSuccess(success);
+
                     if (success) {
-                        setConfirmationNumber(`ADRIZZ-${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+                        trackEvent('booking_complete', { 
+                            activityId: activity.id,
+                            totalPrice: calculateTotalPrice(),
+                            confirmationNumber: newConfirmationNumber,
+                            addons: {
+                                proAdventurer: selectedAddons.proAdventurer,
+                                premiumPhoto: selectedAddons.premiumPhoto
+                            }
+                        });
+                        setConfirmationNumber(newConfirmationNumber);
                         setBookingStep(4); // Move to confirmation step
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     } else {
-                        // Stay on payment step, show error
+                        trackEvent('payment_failed', {
+                            activityId: activity.id,
+                            totalPrice: calculateTotalPrice(),
+                        });
                     }
                 }, 2000);
             };
@@ -1445,34 +1521,56 @@
             const formatPrice = (price) => {
                 return `₹${price.toLocaleString('en-IN')}`;
             };
+            
+            // Simulates downloading a file
+            const handleDownloadTicket = () => {
+                trackEvent('eticket_download', { confirmationNumber: confirmationNumber });
+                const ticketContent = `
+    Adrenaline Rizz E-Ticket
+    =========================
+    Booking Confirmation: ${confirmationNumber}
+    Activity: ${activity.name}
+    Location: ${activity.location}
+    Date: ${selectedDate ? selectedDate.toLocaleDateString('en-IN') : 'N/A'}
+    Time: ${selectedTimeSlot || 'N/A'}
+    Booked By: ${formData.fullName}
+    
+    Thank you for your booking! Please arrive 15 minutes early.
+                `;
+                const blob = new Blob([ticketContent.trim()], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `AdrenalineRizz-Ticket-${confirmationNumber}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
 
             // Calendar functions
             const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-            const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay(); // 0 for Sunday, 1 for Monday
+            const getFirstDayOfMonth = (year, month) => new Date(year, month, 1).getDay(); // 0 for Sunday
 
             const renderCalendar = (month, year) => {
                 const daysInMonth = getDaysInMonth(year, month);
                 const firstDay = getFirstDayOfMonth(year, month);
                 const calendarDays = [];
                 const today = new Date();
-                today.setHours(0,0,0,0); // Normalize today for comparison
+                today.setHours(0,0,0,0);
 
-                // Fill leading empty days
                 for (let i = 0; i < firstDay; i++) {
                     calendarDays.push(<div key={`empty-${i}`} className="p-2"></div>);
                 }
 
                 for (let day = 1; day <= daysInMonth; day++) {
                     const date = new Date(year, month, day);
-                    date.setHours(0,0,0,0); // Normalize date for comparison
-                    const isPast = date < today; // Check if date is in the past
+                    const isPast = date < today;
                     const isSelected = selectedDate && selectedDate.toDateString() === date.toDateString();
                     const isToday = date.toDateString() === today.toDateString();
 
-                    // Only allow selection of future dates up to 3 months from now
                     const maxDate = new Date();
                     maxDate.setMonth(maxDate.getMonth() + 3);
-                    maxDate.setHours(0,0,0,0);
 
                     const isSelectable = !isPast && date <= maxDate;
 
@@ -1495,30 +1593,13 @@
 
             const generateTimeSlots = (durationMinutes) => {
                 const slots = [];
-                for (let hour = 10; hour <= 18; hour++) { // 10 AM to 6 PM
-                    if (hour < 18 || durationMinutes === 30) { // For 30-min slots, last one is 5:30-6:00
-                        let startHour = hour;
-                        let endHour = hour;
-                        let startMinute = 0;
-                        let endMinute = durationMinutes;
-
-                        // First slot of the hour (e.g., 10:00 - 10:30)
-                        let timeStringStart = `${String(startHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
-                        let timeStringEnd = `${String(endHour).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}`;
-                        slots.push(`${timeStringStart} - ${timeStringEnd}`);
-
-                        if (durationMinutes === 30) {
-                            // Second slot of the hour (e.g., 10:30 - 11:00)
-                            startMinute = 30;
-                            endMinute = 0;
-                            endHour = hour + 1;
-                            timeStringStart = `${String(hour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
-                            timeStringEnd = `${String(endHour).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}`;
-                            slots.push(`${timeStringStart} - ${timeStringEnd}`);
-                        }
-                    } else if (hour === 18 && durationMinutes === 60) {
-                        // For 60-min slots, the last one ends at 7 PM (6 PM + 1 hr)
-                        slots.push(`18:00 - 19:00`);
+                // Generate slots from 10:00 to 18:00
+                for (let hour = 10; hour < 18; hour++) {
+                    for(let minute = 0; minute < 60; minute += durationMinutes) {
+                        const start = new Date(0,0,0, hour, minute);
+                        const end = new Date(start.getTime() + durationMinutes * 60000);
+                        const formatTime = (date) => date.toLocaleTimeString('en-GB', { hour: '2-digit', minute:'2-digit' });
+                        slots.push(`${formatTime(start)} - ${formatTime(end)}`);
                     }
                 }
                 return slots;
@@ -1532,33 +1613,33 @@
             const nextMonth = () => {
                 const next = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
                 const maxMonth = new Date();
-                maxMonth.setMonth(maxMonth.getMonth() + 2); // Allow next 2 months for display (total 3 including current)
-                maxMonth.setDate(1); // Normalize to first of month for comparison
-                if (next.getFullYear() < maxMonth.getFullYear() || (next.getFullYear() === maxMonth.getFullYear() && next.getMonth() <= maxMonth.getMonth())) {
-                     setCurrentMonth(next);
+                maxMonth.setMonth(maxMonth.getMonth() + 2); 
+                if (next <= maxMonth) {
+                    setCurrentMonth(next);
                 }
             };
 
             const prevMonth = () => {
                 const prev = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
                 const todayMonth = new Date();
-                todayMonth.setDate(1); // Normalize to first of month for comparison
-                if (prev >= todayMonth) { // Don't go to past months
+                todayMonth.setDate(1);
+                todayMonth.setHours(0,0,0,0);
+                if (prev >= todayMonth) {
                     setCurrentMonth(prev);
                 }
             };
 
 
             const renderProgressIndicator = () => {
-                const steps = ['Review', 'Enhance', 'Payment', 'Confirmation'];
+                const steps = ['Details', 'Enhance', 'Payment', 'Confirmation'];
                 return (
-                    <div className="flex justify-between items-center mb-8 w-full max-w-2xl mx-auto">
+                    <div className="flex justify-between items-start mb-8 w-full max-w-2xl mx-auto">
                         {steps.map((step, index) => (
                             <React.Fragment key={step}>
-                                <div className="flex flex-col items-center">
+                                <div className="flex flex-col items-center w-20">
                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white transition-colors duration-300
-                                        ${bookingStep > index ? 'bg-forest-green-500' : (bookingStep === index + 1 ? 'bg-terracotta-500' : 'bg-steel-grey-400')}`}>
-                                        {index + 1}
+                                        ${bookingStep > index + 1 ? 'bg-forest-green-500' : (bookingStep === index + 1 ? 'bg-terracotta-500' : 'bg-steel-grey-400')}`}>
+                                        {bookingStep > index + 1 ? <i className="fas fa-check"></i> : index + 1}
                                     </div>
                                     <p className={`text-sm mt-2 text-center transition-colors duration-300
                                         ${bookingStep > index ? 'text-forest-green-700' : (bookingStep === index + 1 ? 'text-terracotta-600 font-semibold' : 'text-steel-grey-600')}`}>
@@ -1566,7 +1647,7 @@
                                     </p>
                                 </div>
                                 {index < steps.length - 1 && (
-                                    <div className={`flex-1 h-1 mx-2 transition-colors duration-300
+                                    <div className={`flex-1 h-1 mt-5 mx-2 transition-colors duration-300
                                         ${bookingStep > index + 1 ? 'bg-forest-green-500' : 'bg-steel-grey-200'}`}></div>
                                 )}
                             </React.Fragment>
@@ -1582,31 +1663,7 @@
                             <div className="animate-fade-in-up">
                                 <h2 className="text-3xl font-bold text-forest-green-600 mb-6 text-center font-['Poppins']">Review Your Booking & Add Details</h2>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    {/* Booking Summary */}
-                                    <div className="bg-light-brown-50 p-6 rounded-lg shadow-md border border-light-brown-100">
-                                        <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Your Adventure:</h3>
-                                        <img src={activity.image} alt={activity.name} className="w-full h-48 object-cover rounded-md mb-4" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/400x200/CCCCCC/000000?text=${activity.name.replace(/\s/g, '+')}`; }} />
-                                        <p className="text-lg text-steel-grey-700 font-bold mb-2">{activity.name}</p>
-                                        <p className="text-steel-grey-600 mb-1">Location: {activity.location}</p>
-                                        <p className="text-steel-grey-600 mb-1">
-                                            Date: {selectedDate ? selectedDate.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Please select a date'}
-                                        </p>
-                                        <p className="text-steel-grey-600 mb-4">
-                                            Time Slot: {selectedTimeSlot || 'Please select a time slot'}
-                                        </p>
-                                        <p className="text-sm text-steel-grey-700 leading-relaxed mb-4">
-                                            Please note: Your activity will take place within the selected time slot. For activities like Scuba Diving (which requires approximately {activity.slotDurationMinutes} minutes), the chosen slot duration is specifically allocated to accommodate the full experience. For shorter activities like Zip Lining or Bungee Jumping, the selected slot provides a window for your adventure.
-                                        </p>
-                                        <p className="text-2xl font-bold text-forest-green-700">Base Price: {formatPrice(activity.basePrice)}</p>
-                                        <p className="text-sm text-forest-green-500 mt-2 flex items-center">
-                                            <i className="fas fa-shield-alt mr-2"></i> Basic Injury Insurance Included
-                                        </p>
-                                        <p className="text-sm text-forest-green-500 mt-1 flex items-center">
-                                            <i className="fas fa-check-circle mr-2"></i> Verified Operator
-                                        </p>
-                                    </div>
-
-                                    {/* Date and Time Selection */}
+                                    {/* Left Column: Date, Time, Details */}
                                     <div className="bg-white p-6 rounded-lg shadow-md border border-steel-grey-100">
                                         <h3 className="text-2xl font-semibold text-forest-green-600 mb-4">Select Date & Time:</h3>
                                         {/* Calendar */}
@@ -1617,7 +1674,7 @@
                                                 <button onClick={nextMonth} className="p-2 rounded-full hover:bg-steel-grey-100 transition-colors" aria-label="Next month"><i className="fas fa-chevron-right"></i></button>
                                             </div>
                                             <div className="grid grid-cols-7 gap-2 text-center text-sm font-medium text-steel-grey-600 mb-2">
-                                                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                                                <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
                                             </div>
                                             <div className="grid grid-cols-7 gap-2">
                                                 {renderCalendar(displayMonth, displayYear)}
@@ -1627,7 +1684,7 @@
 
                                         {/* Time Slots */}
                                         <div className="time-slots-container">
-                                            <h4 className="text-lg font-semibold text-steel-grey-700 mb-3">Available Time Slots ({activity.slotDurationMinutes}-min slots):</h4>
+                                            <h4 className="text-lg font-semibold text-steel-grey-700 mb-3">Available Time Slots ({activity.slotDurationMinutes}-min):</h4>
                                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-48 overflow-y-auto scrollbar-hide p-2 border border-steel-grey-100 rounded-md">
                                                 {generateTimeSlots(activity.slotDurationMinutes).map(slot => (
                                                     <button
@@ -1643,10 +1700,13 @@
                                             </div>
                                             {formErrors.selectedTimeSlot && <p className="text-red-500 text-sm mt-2">{formErrors.selectedTimeSlot}</p>}
                                         </div>
+                                    </div>
 
-                                        {/* Participant Details Form - Combined */}
-                                        <h3 className="text-2xl font-semibold text-forest-green-600 mb-4 mt-8">Your Contact Details:</h3>
-                                        <form className="space-y-4">
+                                    {/* Right Column: Summary & Form */}
+                                     <div className="bg-light-brown-50 p-6 rounded-lg shadow-md border border-light-brown-100 space-y-4">
+                                         {/* Participant Details Form */}
+                                        <h3 className="text-2xl font-semibold text-forest-green-600 mb-4">Your Details:</h3>
+                                        <form className="space-y-4" noValidate>
                                             <div>
                                                 <label htmlFor="fullName" className="block text-steel-grey-700 text-sm font-semibold mb-1">Full Name</label>
                                                 <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="Your Full Name" />
@@ -1659,7 +1719,7 @@
                                             </div>
                                             <div>
                                                 <label htmlFor="phone" className="block text-steel-grey-700 text-sm font-semibold mb-1">Phone Number</label>
-                                                <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="+91 9876543210" />
+                                                <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="9876543210" />
                                                 {formErrors.phone && <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>}
                                             </div>
                                             <div>
@@ -1669,20 +1729,20 @@
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
-                                                    <label htmlFor="emergencyContactName" className="block text-steel-grey-700 text-sm font-semibold mb-1">Emergency Contact Name</label>
-                                                    <input type="text" id="emergencyContactName" name="emergencyContactName" value={formData.emergencyContactName} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="Emergency Contact Name" />
+                                                    <label htmlFor="emergencyContactName" className="block text-steel-grey-700 text-sm font-semibold mb-1">Emergency Contact</label>
+                                                    <input type="text" id="emergencyContactName" name="emergencyContactName" value={formData.emergencyContactName} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="Contact Name" />
                                                     {formErrors.emergencyContactName && <p className="text-red-500 text-sm mt-1">{formErrors.emergencyContactName}</p>}
                                                 </div>
                                                 <div>
-                                                    <label htmlFor="emergencyContactPhone" className="block text-steel-grey-700 text-sm font-semibold mb-1">Emergency Contact Phone</label>
-                                                    <input type="tel" id="emergencyContactPhone" name="emergencyContactPhone" value={formData.emergencyContactPhone} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="+91 9876543210" />
+                                                    <label htmlFor="emergencyContactPhone" className="block text-steel-grey-700 text-sm font-semibold mb-1">Emergency Phone</label>
+                                                    <input type="tel" id="emergencyContactPhone" name="emergencyContactPhone" value={formData.emergencyContactPhone} onChange={handleInputChange} className="w-full p-3 border rounded-md focus:ring-2 focus:ring-deep-sky-blue-500" placeholder="9876543210" />
                                                     {formErrors.emergencyContactPhone && <p className="text-red-500 text-sm mt-1">{formErrors.emergencyContactPhone}</p>}
                                                 </div>
                                             </div>
                                             <div className="flex items-center">
                                                 <input type="checkbox" id="agreedToTerms" name="agreedToTerms" checked={formData.agreedToTerms} onChange={handleInputChange} className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500" />
                                                 <label htmlFor="agreedToTerms" className="ml-2 text-steel-grey-700 text-sm">
-                                                    I agree to the <a href="#" onClick={() => window.setPageAndPost('legal')} className="text-deep-sky-blue-600 hover:underline">Terms of Service</a> and <a href="#" onClick={() => window.setPageAndPost('legal')} className="text-deep-sky-blue-600 hover:underline">Cancellation Policy</a>.
+                                                    I agree to the <a href="#" onClick={(e)=>{e.preventDefault(); setCurrentPage('legal')}} className="text-deep-sky-blue-600 hover:underline">Terms of Service</a>.
                                                 </label>
                                             </div>
                                             {formErrors.agreedToTerms && <p className="text-red-500 text-sm mt-1">{formErrors.agreedToTerms}</p>}
@@ -1700,7 +1760,7 @@
                                     <div className="bg-white p-6 rounded-lg shadow-md border border-steel-grey-100">
                                         <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Optional Add-ons:</h3>
                                         <div className="space-y-4">
-                                            <label className="flex items-center p-3 border rounded-md cursor-pointer hover:bg-light-brown-50 transition-colors">
+                                            <label className={`flex items-center p-4 border rounded-md cursor-pointer hover:bg-light-brown-50 transition-colors ${selectedAddons.proAdventurer ? 'border-deep-sky-blue-500 ring-2 ring-deep-sky-blue-500' : 'border-steel-grey-200'}`}>
                                                 <input
                                                     type="checkbox"
                                                     className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500"
@@ -1713,7 +1773,7 @@
                                                     <p className="text-xs text-steel-grey-600 mt-1">Enhanced Injury Insurance & Basic Photo Pack.</p>
                                                 </div>
                                             </label>
-                                            <label className="flex items-center p-3 border rounded-md cursor-pointer hover:bg-light-brown-50 transition-colors">
+                                            <label className={`flex items-center p-4 border rounded-md cursor-pointer hover:bg-light-brown-50 transition-colors ${selectedAddons.premiumPhoto ? 'border-deep-sky-blue-500 ring-2 ring-deep-sky-blue-500' : 'border-steel-grey-200'}`}>
                                                 <input
                                                     type="checkbox"
                                                     className="form-checkbox h-5 w-5 text-deep-sky-blue-500 rounded focus:ring-deep-sky-blue-500"
@@ -1729,32 +1789,28 @@
                                         </div>
                                     </div>
 
-                                    {/* Adventures You Might Also Love */}
-                                    <div className="bg-white p-6 rounded-lg shadow-md border border-steel-grey-100">
-                                        <h3 className="text-2xl font-semibold text-forest-green-600 mb-4">Adventures You Might Also Love:</h3>
-                                        {recommendedActivities.length > 0 ? (
-                                            <div className="grid grid-cols-1 gap-4">
-                                                {recommendedActivities.map(recActivity => (
-                                                    <div key={recActivity.id} className="flex items-center p-3 border border-steel-grey-100 rounded-md bg-light-brown-50">
-                                                        <img src={recActivity.image} alt={recActivity.name} className="w-16 h-16 object-cover rounded-md mr-3" onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/64x64/D3D3D3/000000?text=${recActivity.name.slice(0,1)}`; }} />
-                                                        <div>
-                                                            <p className="font-semibold text-terracotta-600 text-lg">{recActivity.name}</p>
-                                                            <p className="text-sm text-steel-grey-700">{recActivity.location} | {recActivity.displayPrice}</p>
-                                                            <a href="#" onClick={(e) => { e.preventDefault(); window.open(`index.html?page=adventures&activityId=${recActivity.id}`, '_blank'); }} className="text-deep-sky-blue-600 hover:underline text-sm mt-1 inline-block">Explore This Adventure &rarr;</a>
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                    {/* Order Summary */}
+                                    <div className="bg-light-brown-50 p-6 rounded-lg shadow-md border border-light-brown-100">
+                                        <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Your Order Summary:</h3>
+                                        <div className="flex justify-between text-lg text-steel-grey-700 mb-2">
+                                            <span>{activity.name}</span>
+                                            <span>{formatPrice(activity.basePrice)}</span>
+                                        </div>
+                                        {selectedAddons.proAdventurer && (
+                                            <div className="flex justify-between text-steel-grey-700 text-base mb-1">
+                                                <span>Pro Adventurer Package</span>
+                                                <span>+ {formatPrice(ADDON_PRO_ADVENTURER_PRICE)}</span>
                                             </div>
-                                        ) : (
-                                            <p className="text-steel-grey-700 italic">No other recommendations at the moment.</p>
                                         )}
-                                        <div className="text-center mt-6">
-                                            <button
-                                                className="bg-forest-green-100 text-forest-green-700 hover:bg-forest-green-200 font-semibold py-2 px-6 rounded-full text-md transition-colors"
-                                                onClick={() => setCurrentPage('adventures')}
-                                            >
-                                                View All Adventures
-                                            </button>
+                                        {selectedAddons.premiumPhoto && (
+                                            <div className="flex justify-between text-steel-grey-700 text-base mb-1">
+                                                <span>Premium Photo/Video Pack</span>
+                                                <span>+ {formatPrice(ADDON_PREMIUM_PHOTO_PACK_PRICE)}</span>
+                                            </div>
+                                        )}
+                                        <div className="border-t border-steel-grey-200 pt-4 mt-4 flex justify-between text-2xl font-bold text-forest-green-700">
+                                            <span>Total Amount:</span>
+                                            <span>{formatPrice(calculateTotalPrice())}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1767,7 +1823,7 @@
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                     {/* Final Summary */}
                                     <div className="bg-light-brown-50 p-6 rounded-lg shadow-md border border-light-brown-100">
-                                        <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Your Order Summary:</h3>
+                                        <h3 className="text-2xl font-semibold text-terracotta-600 mb-4">Final Order Summary:</h3>
                                         <div className="flex justify-between text-lg text-steel-grey-700 mb-2">
                                             <span>{activity.name}</span>
                                             <span>{formatPrice(activity.basePrice)}</span>
@@ -1797,7 +1853,7 @@
                                         <div className="flex justify-center space-x-4 mb-6">
                                             <i className="fab fa-cc-visa fa-3x text-deep-sky-blue-600"></i>
                                             <i className="fab fa-cc-mastercard fa-3x text-terracotta-600"></i>
-                                            <i className="fas fa-money-check-alt fa-3x text-forest-green-600"></i> {/* Generic for Netbanking/UPI */}
+                                            <i className="fas fa-money-check-alt fa-3x text-forest-green-600"></i>
                                         </div>
                                         <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handlePaymentSubmit(); }}>
                                             <div>
@@ -1831,7 +1887,7 @@
                                                 className="w-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-bold py-3 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-terracotta-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                                 disabled={isProcessingPayment}
                                             >
-                                                Pay Now
+                                                {isProcessingPayment ? 'Processing...' : `Pay ${formatPrice(calculateTotalPrice())}`}
                                             </button>
                                         </form>
                                     </div>
@@ -1854,9 +1910,9 @@
                                 <div className="max-w-md mx-auto mb-8">
                                     <h3 className="text-xl font-semibold text-forest-green-600 mb-3">What's Next?</h3>
                                     <ul className="list-disc list-inside text-steel-grey-700 text-left space-y-2">
-                                        <li>Your detailed booking confirmation has been sent to **{formData.email}**.</li>
+                                        <li>Your detailed booking confirmation has been sent to <strong>{formData.email}</strong>.</li>
                                         <li>Please review the attached e-ticket/voucher for activity specifics and meeting points.</li>
-                                        <li><a href="#" className="text-deep-sky-blue-600 hover:underline" onClick={(e) => { e.preventDefault(); alert('Simulating download of e-ticket!'); }}>Download Your E-Ticket</a></li>
+                                        <li><button onClick={handleDownloadTicket} className="text-deep-sky-blue-600 hover:underline font-semibold">Download Your E-Ticket</button></li>
                                         <li>Arrive at least 15 minutes before your scheduled slot.</li>
                                     </ul>
                                 </div>
@@ -1895,7 +1951,7 @@
 
                     {renderProgressIndicator()}
 
-                    <div className="bg-stone-50 rounded-lg p-8">
+                    <div className="bg-stone-50 rounded-lg p-4 sm:p-8">
                         {renderStepContent()}
                     </div>
 
@@ -1929,22 +1985,64 @@
         const App = () => {
             const [currentPage, setCurrentPage] = useState('home');
             const [isMenuOpen, setIsMenuOpen] = useState(false);
-            const [selectedBlogPost, setSelectedBlogPost] = useState(null); // State for single blog post view
-            const [selectedActivityForBooking, setSelectedActivityForBooking] = useState(null); // State for activity being booked
-            const [bookingStep, setBookingStep] = useState(0); // 0: not in booking flow, 1-4: booking steps
+            const [selectedBlogPost, setSelectedBlogPost] = useState(null);
+            const [selectedActivityForBooking, setSelectedActivityForBooking] = useState(null);
+            const [bookingStep, setBookingStep] = useState(0);
+            const [analyticsEvents, setAnalyticsEvents] = useState([]); // State for analytics events
 
-            // Expose setters to global scope for onClick handlers in dangerouslySetInnerHTML and other components
+            // Centralized function to track analytics events
+            const logEvent = useCallback((eventName, eventData) => {
+                const newEvent = {
+                    name: eventName,
+                    timestamp: new Date().toISOString(),
+                    data: eventData,
+                    page: currentPage,
+                };
+                setAnalyticsEvents(prevEvents => [...prevEvents, newEvent]);
+                console.log("Analytics Event:", newEvent); // For debugging
+            }, [currentPage]);
+
+
+            // Expose setters and analytics to global scope
             useEffect(() => {
                 appSetCurrentPage = setCurrentPage;
                 appSetSelectedBlogPost = setSelectedBlogPost;
                 appSetSelectedActivityForBooking = setSelectedActivityForBooking;
                 appSetBookingStep = setBookingStep;
-            }, []);
+                trackEvent = logEvent;
+            }, [logEvent]);
+
+            // Track page views and blog post views
+            useEffect(() => {
+                if (selectedBlogPost) {
+                    trackEvent('blog_post_view', { postId: selectedBlogPost.id, title: selectedBlogPost.title });
+                } else {
+                    trackEvent('page_view', { page: currentPage });
+                }
+            }, [currentPage, selectedBlogPost, logEvent]);
 
             // Close mobile menu on page change
             useEffect(() => {
                 setIsMenuOpen(false);
             }, [currentPage, selectedBlogPost, bookingStep]);
+            
+            // This effect handles the initial routing based on URL parameters.
+            useEffect(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const page = urlParams.get('page');
+                const activityId = urlParams.get('activityId');
+                if (page) {
+                    setCurrentPage(page);
+                }
+                if (activityId) {
+                    const activityToBook = activities.find(a => a.id === activityId);
+                    if (activityToBook) {
+                        window.startBooking(activityToBook);
+                    }
+                }
+            }, []);
+            
+            const fullActivityForBooking = activities.find(a => a.id === (selectedActivityForBooking && selectedActivityForBooking.id));
 
 
             // Conditional rendering based on currentPage state
@@ -1969,7 +2067,7 @@
                     case 'adventures':
                         return <AdventuresPage activities={activities} setCurrentPage={setCurrentPage} setSelectedActivityForBooking={setSelectedActivityForBooking} />;
                     case 'pricing':
-                        return <PricingPage />;
+                        return <PricingPage setCurrentPage={setCurrentPage} />;
                     case 'blog':
                         return <BlogPage blogPosts={blogPosts} setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />;
                     case 'joinus':
@@ -1979,9 +2077,9 @@
                     case 'faqs':
                         return <FAQsPage faqs={faqs} />;
                     case 'legal':
-                        return <LegalPage />;
+                        return <LegalPage setCurrentPage={setCurrentPage}/>;
                     case 'booking':
-                        return <BookingFlowPage activity={selectedActivityForBooking} setCurrentPage={setCurrentPage} bookingStep={bookingStep} setBookingStep={setBookingStep} activities={activities} />;
+                        return <BookingFlowPage activity={fullActivityForBooking} setCurrentPage={setCurrentPage} bookingStep={bookingStep} setBookingStep={setBookingStep} activities={activities} />;
                     default:
                         return <HeroSection setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />; // Fallback to Home
                 }
@@ -1993,7 +2091,7 @@
                     <main className="flex-grow">
                         {renderPage()}
                     </main>
-                    <Footer setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} />
+                    <Footer setCurrentPage={setCurrentPage} setSelectedBlogPost={setSelectedBlogPost} analyticsEvents={analyticsEvents} />
                 </>
             );
         };
